@@ -27,7 +27,7 @@ df = pd.DataFrame(
 
 
 class test_cythonbiogeme(unittest.TestCase):
-    def simple_test(self):
+    def test_simple(self):
         variable_1 = Variable('Variable1')
         variable_2 = Variable('Variable2')
         the_sum = variable_1 + variable_2
@@ -51,7 +51,7 @@ class test_cythonbiogeme(unittest.TestCase):
         )
         correct_results = [110, 220, 330, 440, 550]
         f, _, _, _ = cpp.getResults()
-        self.assertListEqual(f, correct_results)
+        self.assertListEqual(list(f), correct_results)
 
 
 if __name__ == '__main__':

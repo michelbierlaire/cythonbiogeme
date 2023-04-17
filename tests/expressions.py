@@ -6,9 +6,11 @@
 """
 
 import logging
+from itertools import chain
 
 logger = logging.getLogger(__name__)
 
+from idmanager import TypeOfElementaryExpression
 
 def isNumeric(obj):
     """Checks if an object is numeric
@@ -68,6 +70,39 @@ class Expression:
         for e in self.get_children():
             e.setIdManager(id_manager)
 
+    def set_of_elementary_expression(self, the_type):
+        """Extract a dict with all elementary expressions of a specific type
+
+        :param the_type: the type of expression
+        :type  the_type: TypeOfElementaryExpression
+
+        :return: returns a set with the names of the elementary expressions
+        :rtype: set(string.Expression)
+
+        """
+        return set(self.dict_of_elementary_expression(the_type).keys())
+
+    def dict_of_elementary_expression(self, the_type):
+        """Extract a dict with all elementary expressions of a specific type
+
+        :param the_type: the type of expression
+        :type  the_type: TypeOfElementaryExpression
+
+        :return: returns a dict with the variables appearing in the
+               expression the keys being their names.
+        :rtype: dict(string:biogeme.expressions.Expression)
+
+        """
+        return dict(
+            chain(
+                *(
+                    e.dict_of_elementary_expression(the_type).items()
+                    for e in self.children
+                )
+            )
+        )
+
+            
     def __add__(self, other):
         """
         Operator overloading. Generate an expression for addition.
@@ -352,3 +387,14 @@ class Variable(Elementary):
         signature += f'{{{self.get_id()}}}'
         signature += f'"{self.name}",{self.elementaryIndex},{self.variableId}'
         return [signature.encode()]
+
+    def dict_of_elementary_expression(self, the_type):
+        """Extract a dict with all elementary expressions of a specific type
+
+        :param the_type: the type of expression
+        :type  the_type: TypeOfElementaryExpression
+        """
+        if the_type == TypeOfElementaryExpression.VARIABLE:
+            return {self.name: self}
+        return {}
+    
