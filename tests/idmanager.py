@@ -20,6 +20,7 @@ class TypeOfElementaryExpression(Enum):
     RANDOM_VARIABLE = auto()
     DRAWS = auto()
 
+
 ElementsTuple = namedtuple('ElementsTuple', 'expressions indices names')
 
 logger = logging.getLogger(__name__)
@@ -28,24 +29,10 @@ logger = logging.getLogger(__name__)
 class IdManager:
     """Class combining managing the ids of an arithmetic expression."""
 
-    def __init__(self, expressions, database, number_of_draws):
-        """Ctor
-
-        :param expressions: list of expressions
-        :type expressions: list(biogeme.expressions.Expression)
-
-        :param database: database with the variables as column names
-        :type database: biogeme.database.Database
-
-        :param number_of_draws: number of draws for Monte-Carlo integration
-        :type number_of_draws: int
-
-        :raises BiogemeError: if an expression contains a variable and
-            no database is provided.
-
-        """
+    def __init__(self, expressions, dataframe, number_of_draws):
+        """Ctor"""
         self.expressions = expressions
-        self.database = database
+        self.dataframe = dataframe
         self.number_of_draws = number_of_draws
         self.elementary_expressions = None
         self.free_betas = None
@@ -167,8 +154,8 @@ class IdManager:
         # Variables
         # Here, we do not extract the variables from the
         # formulas. Instead, we use all the variables in the database.
-        if self.database is not None:
-            variables_names = list(self.database.data.columns.values)
+        if self.dataframe is not None:
+            variables_names = list(self.dataframe.columns.values)
             variables_indices = {}
             for i, v in enumerate(variables_names):
                 variables_indices[v] = i
@@ -205,11 +192,6 @@ class IdManager:
         self.fixed_betas_values = [
             self.fixed_betas.expressions[x].initValue for x in self.fixed_betas.names
         ]
-
-        if self.requires_draws:
-            self.database.generateDraws(
-                self.draws.expressions, self.draws.names, self.number_of_draws
-            )
 
     def setData(self, sample):
         """Specify the sample

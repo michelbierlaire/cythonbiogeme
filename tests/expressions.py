@@ -9,6 +9,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 def isNumeric(obj):
     """Checks if an object is numeric
     :param obj: obj to be checked
@@ -22,6 +23,7 @@ class Expression:
     """This is the general arithmetic expression in biogeme.
     It serves as a base class for concrete expressions.
     """
+
     def __init__(self):
         """Constructor"""
 
@@ -168,7 +170,6 @@ class Expression:
             mysignature += f',{e.get_id()}'
         listOfSignatures += [mysignature.encode()]
         return listOfSignatures
-
 
     def get_id(self):
         """Retrieve the id of the expression used in the signature
@@ -351,5 +352,3 @@ class Variable(Elementary):
         signature += f'{{{self.get_id()}}}'
         signature += f'"{self.name}",{self.elementaryIndex},{self.variableId}'
         return [signature.encode()]
-
-
