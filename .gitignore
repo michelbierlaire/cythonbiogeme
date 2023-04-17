@@ -1,3 +1,6 @@
+src/cythonbiogeme/__pycache__
+tests/__pycache__
+
 # Prerequisites
 *.d
 
