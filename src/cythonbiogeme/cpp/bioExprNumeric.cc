@@ -7,11 +7,13 @@
 //
 //--------------------------------------------------------------------
 
-#include "bioExprNumeric.h"
 #include <sstream>
+#include "bioExprNumeric.h"
 #include "bioDebug.h"
+#include "validity_check.h"
+
 bioExprNumeric::bioExprNumeric(bioReal v) : value(v) {
-  
+  validity_check(v, true);
 }
 
 bioExprNumeric::~bioExprNumeric() {

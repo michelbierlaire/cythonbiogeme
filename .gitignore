@@ -35,3 +35,4 @@ build
 *.out
 *.app
 src/cythonbiogeme/cpp/cythonbiogeme.cpp
+src/cythonbiogeme.egg-info/

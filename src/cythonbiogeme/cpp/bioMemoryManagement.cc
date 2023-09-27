@@ -35,13 +35,17 @@
 #include "bioExprNormalCdf.h"
 #include "bioExprPanelTrajectory.h"
 #include "bioExprExp.h"
+#include "bioExprSin.h"
+#include "bioExprCos.h"
 #include "bioExprLog.h"
 #include "bioExprLogzero.h"
+#include "bioExprBelongsTo.h"
 #include "bioExprDerive.h"
 #include "bioExprIntegrate.h"
 #include "bioExprLogLogit.h"
 #include "bioExprLogLogitFullChoiceSet.h"
 #include "bioExprMultSum.h"
+#include "bioExprConditionalSum.h"
 #include "bioExprElem.h"
 #include "bioSeveralExpressions.h"
 
@@ -223,6 +227,18 @@ void bioMemoryManagement::releaseAllMemory() {
     delete(*i) ;
   }
   a_bioExprExp.clear() ;
+  for (std::vector<bioExprSin*>::iterator i = a_bioExprSin.begin() ;
+       i != a_bioExprSin.end() ;
+       ++i) {
+    delete(*i) ;
+  }
+  a_bioExprSin.clear() ;
+  for (std::vector<bioExprCos*>::iterator i = a_bioExprCos.begin() ;
+       i != a_bioExprCos.end() ;
+       ++i) {
+    delete(*i) ;
+  }
+  a_bioExprCos.clear() ;
   for (std::vector<bioExprLog*>::iterator i = a_bioExprLog.begin() ;
        i != a_bioExprLog.end() ;
        ++i) {
@@ -235,6 +251,12 @@ void bioMemoryManagement::releaseAllMemory() {
     delete(*i) ;
   }
   a_bioExprLogzero.clear() ;
+  for (std::vector<bioExprBelongsTo*>::iterator i = a_bioExprBelongsTo.begin() ;
+       i != a_bioExprBelongsTo.end() ;
+       ++i) {
+    delete(*i) ;
+  }
+  a_bioExprBelongsTo.clear() ;
   for (std::vector<bioExprDerive*>::iterator i = a_bioExprDerive.begin() ;
        i != a_bioExprDerive.end() ;
        ++i) {
@@ -271,6 +293,12 @@ void bioMemoryManagement::releaseAllMemory() {
     delete(*i) ;
   }
   a_bioExprMultSum.clear() ;
+  for (std::vector<bioExprConditionalSum*>::iterator i = a_bioExprConditionalSum.begin() ;
+       i != a_bioExprConditionalSum.end() ;
+       ++i) {
+    delete(*i) ;
+  }
+  a_bioExprConditionalSum.clear() ;
   for (std::vector<bioExprElem*>::iterator i = a_bioExprElem.begin() ;
        i != a_bioExprElem.end() ;
        ++i) {
@@ -477,6 +505,18 @@ bioExprExp* bioMemoryManagement::get_bioExprExp(bioExpression* c) {
   return ptr ;
 }
 
+bioExprSin* bioMemoryManagement::get_bioExprSin(bioExpression* c) {
+  bioExprSin* ptr = new bioExprSin(c) ;
+  a_bioExprSin.push_back(ptr) ;
+  return ptr ;
+}
+
+bioExprCos* bioMemoryManagement::get_bioExprCos(bioExpression* c) {
+  bioExprCos* ptr = new bioExprCos(c) ;
+  a_bioExprCos.push_back(ptr) ;
+  return ptr ;
+}
+
 bioExprLog* bioMemoryManagement::get_bioExprLog(bioExpression* c) {
   bioExprLog* ptr = new bioExprLog(c) ;
   a_bioExprLog.push_back(ptr) ;
@@ -486,6 +526,12 @@ bioExprLog* bioMemoryManagement::get_bioExprLog(bioExpression* c) {
 bioExprLogzero* bioMemoryManagement::get_bioExprLogzero(bioExpression* c) {
   bioExprLogzero* ptr = new bioExprLogzero(c) ;
   a_bioExprLogzero.push_back(ptr) ;
+  return ptr ;
+}
+
+bioExprBelongsTo* bioMemoryManagement::get_bioExprBelongsTo(bioExpression* c, const std::set<bioReal>& the_set) {
+  bioExprBelongsTo* ptr = new bioExprBelongsTo(c, the_set) ;
+  a_bioExprBelongsTo.push_back(ptr) ;
   return ptr ;
 }
 
@@ -525,6 +571,12 @@ bioExprLogLogitFullChoiceSet* bioMemoryManagement::get_bioExprLogLogitFullChoice
 bioExprMultSum* bioMemoryManagement::get_bioExprMultSum(std::vector<bioExpression*> e) {
   bioExprMultSum* ptr = new bioExprMultSum(e) ;
   a_bioExprMultSum.push_back(ptr) ;
+  return ptr ;
+}
+
+bioExprConditionalSum* bioMemoryManagement::get_bioExprConditionalSum(std::unordered_map<bioExpression*, bioExpression*> d) {
+  bioExprConditionalSum* ptr = new bioExprConditionalSum(d) ;
+  a_bioExprConditionalSum.push_back(ptr) ;
   return ptr ;
 }
 

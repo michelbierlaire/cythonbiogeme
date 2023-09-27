@@ -23,8 +23,8 @@ bioExprLog::~bioExprLog() {
 }
 
 const bioDerivatives* bioExprLog::getValueAndDerivatives(std::vector<bioUInt> literalIds,
-						   bioBoolean gradient,
-						   bioBoolean hessian) {
+							 bioBoolean gradient,
+							 bioBoolean hessian) {
   
 
   theDerivatives.with_g = gradient ;

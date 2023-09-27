@@ -38,14 +38,18 @@
 #include "bioExprPower.h"
 #include "bioExprUnaryMinus.h"
 #include "bioExprExp.h"
+#include "bioExprSin.h"
+#include "bioExprCos.h"
 #include "bioExprLog.h"
 #include "bioExprLogzero.h"
 #include "bioExprMultSum.h"
+#include "bioExprConditionalSum.h"
 #include "bioExprLogLogit.h"
 #include "bioExprLogLogitFullChoiceSet.h"
 #include "bioExprLinearUtility.h"
 #include "bioExprNumeric.h"
 #include "bioExprDerive.h"
+#include "bioExprBelongsTo.h"
 #include "bioExprDraws.h"
 #include "bioExprMontecarlo.h"
 #include "bioExprNormalCdf.h"
@@ -152,7 +156,7 @@ bioExpression* bioFormula::processFormula(bioString f) {
   }
   else if (typeOfExpression == "Numeric") {
     std::vector<bioString> items = split(f,',') ;
-    bioReal v = std::stof(items[1]) ;
+    bioReal v = std::stod(items[1]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprNumeric(v) ;
     expressions[id] = theExpression ;
     return theExpression ;
@@ -417,6 +421,37 @@ bioExpression* bioFormula::processFormula(bioString f) {
     expressions[id] = theExpression ;
     return theExpression ;
   }
+  else if (typeOfExpression == "sin") {
+    std::vector<bioString> items = split(f,',') ;
+    std::map<bioString,bioExpression*>::iterator e = expressions.find(items[1]) ;
+    theExpression = bioMemoryManagement::the()->get_bioExprSin(e->second) ;
+    expressions[id] = theExpression ;
+    return theExpression ;
+  }
+  else if (typeOfExpression == "cos") {
+    std::vector<bioString> items = split(f,',') ;
+    std::map<bioString,bioExpression*>::iterator e = expressions.find(items[1]) ;
+    theExpression = bioMemoryManagement::the()->get_bioExprCos(e->second) ;
+    expressions[id] = theExpression ;
+    return theExpression ;
+  }
+  else if (typeOfExpression == "BelongsTo") {
+    bioString strNbrExpr = extractParentheses('(',')',f) ;
+    bioUInt nbr_elements = std::stoi(strNbrExpr) ;
+    std::vector<bioString> items = split(f,',') ;
+    std::map<bioString,bioExpression*>::iterator child = expressions.find(items[1]) ;
+    std::set<bioReal> the_set ;    
+    for (bioUInt i = 0 ; i < nbr_elements ; ++i) {
+      std::stringstream ss(items[2+i]);
+      float value;
+      ss >> value;
+      the_set.insert(value);      
+    }
+    theExpression = bioMemoryManagement::the()->get_bioExprBelongsTo(child->second,
+								     the_set) ;
+    expressions[id] = theExpression ;
+    return theExpression ;
+  }
   else if (typeOfExpression == "Derive") {
     std::vector<bioString> items = split(f,',') ;
     std::map<bioString,bioExpression*>::iterator e = expressions.find(items[1]) ;
@@ -513,6 +548,30 @@ bioExpression* bioFormula::processFormula(bioString f) {
     }
 
     theExpression = bioMemoryManagement::the()->get_bioExprMultSum(theExpressions) ;
+    expressions[id] = theExpression ;
+    return theExpression ;
+  }
+  else if (typeOfExpression == "ConditionalSum") {
+    bioString strNbrExpr = extractParentheses('(',')',f) ;
+    bioUInt nbr_terms = std::stoi(strNbrExpr) ;
+    std::vector<bioString> items = split(f,',') ;
+    std::unordered_map<bioExpression*, bioExpression*> the_terms ;
+    for (bioUInt i = 0 ; i < nbr_terms ; ++i) {
+      std::map<bioString,bioExpression*>::iterator key = expressions.find(items[1+2*i]) ;
+      if (key == expressions.end()) {
+	std::stringstream str ;
+	str << "No expression number: " << items[1+2*i] ;
+	throw bioExceptions(__FILE__,__LINE__,str.str()) ;
+      }
+      std::map<bioString,bioExpression*>::iterator term = expressions.find(items[1+2*i+1]) ;
+      if (term == expressions.end()) {
+	std::stringstream str ;
+	str << "No expression number: " << items[1+2*i+1] ;
+	throw bioExceptions(__FILE__,__LINE__,str.str()) ;
+      }
+      the_terms[key->second] = term->second ;
+    }
+    theExpression = bioMemoryManagement::the()->get_bioExprConditionalSum(the_terms) ;
     expressions[id] = theExpression ;
     return theExpression ;
   }

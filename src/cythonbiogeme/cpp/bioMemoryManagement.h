@@ -10,6 +10,7 @@
 #define bioMemoryManagement_h
 
 #include <vector>
+#include <set>
 #include "bioTypes.h"
 #include "bioString.h"
 #include "bioExprLinearUtility.h"
@@ -41,13 +42,17 @@ class bioExprMontecarlo ;
 class bioExprNormalCdf ;
 class bioExprPanelTrajectory ;
 class bioExprExp ;
+class bioExprSin ;
+class bioExprCos ;
 class bioExprLog ;
 class bioExprLogzero ;
+class bioExprBelongsTo ;
 class bioExprDerive ;
 class bioExprIntegrate ;
 class bioExprLogLogit ;
 class bioExprLogLogitFullChoiceSet ;
 class bioExprMultSum ;
+class bioExprConditionalSum ;
 class bioExprElem ;
 
 class bioSeveralExpressions ;
@@ -94,9 +99,12 @@ public:
   bioExprNormalCdf* get_bioExprNormalCdf(bioExpression* ell) ;
   bioExprPanelTrajectory* get_bioExprPanelTrajectory(bioExpression* ell) ;
   bioExprExp* get_bioExprExp(bioExpression* ell) ;
+  bioExprSin* get_bioExprSin(bioExpression* ell) ;
+  bioExprCos* get_bioExprCos(bioExpression* ell) ;
   bioExprLog* get_bioExprLog(bioExpression* ell) ;
   bioExprLogzero* get_bioExprLogzero(bioExpression* ell) ;
   bioExprDerive* get_bioExprDerive(bioExpression* c, bioUInt lid) ;
+  bioExprBelongsTo* get_bioExprBelongsTo(bioExpression* c, const std::set<bioReal>& the_set) ;
   bioExprIntegrate* get_bioExprIntegrate(bioExpression* c, bioUInt lid) ;
   bioExprLinearUtility* get_bioExprLinearUtility(std::vector<bioLinearTerm> t) ;
   bioExprLogLogit* get_bioExprLogLogit(bioExpression* c,
@@ -104,6 +112,7 @@ public:
 				       std::map<bioUInt,bioExpression*> a) ;
   bioExprLogLogitFullChoiceSet* get_bioExprLogLogitFullChoiceSet(bioExpression* c,
 								 std::map<bioUInt,bioExpression*> u) ;
+  bioExprConditionalSum* get_bioExprConditionalSum(std::unordered_map<bioExpression*, bioExpression*> d) ;
   bioExprMultSum* get_bioExprMultSum(std::vector<bioExpression*> e) ;
   bioExprElem* get_bioExprElem(bioExpression* k, std::map<bioUInt,bioExpression*> d) ;
   bioSeveralExpressions* get_bioSeveralExpressions(std::vector<bioExpression*> exprs) ;
@@ -135,14 +144,18 @@ private:
   std::vector<bioExprNormalCdf*> a_bioExprNormalCdf ;
   std::vector<bioExprPanelTrajectory*> a_bioExprPanelTrajectory ;
   std::vector<bioExprExp*> a_bioExprExp ;
+  std::vector<bioExprSin*> a_bioExprSin ;
+  std::vector<bioExprCos*> a_bioExprCos ;
   std::vector<bioExprLog*> a_bioExprLog ;
   std::vector<bioExprLogzero*> a_bioExprLogzero ;
   std::vector<bioExprDerive*> a_bioExprDerive ;
+  std::vector<bioExprBelongsTo*> a_bioExprBelongsTo ;
   std::vector<bioExprIntegrate*> a_bioExprIntegrate ;
   std::vector<bioExprLinearUtility*> a_bioExprLinearUtility ;
   std::vector<bioExprLogLogit*> a_bioExprLogLogit ;
   std::vector<bioExprLogLogitFullChoiceSet*> a_bioExprLogLogitFullChoiceSet ;
   std::vector<bioExprMultSum*> a_bioExprMultSum ;
+  std::vector<bioExprConditionalSum*> a_bioExprConditionalSum ;
   std::vector<bioExprElem*> a_bioExprElem ;
   std::vector<bioSeveralExpressions*> a_bioSeveralExpressions ;
 };
