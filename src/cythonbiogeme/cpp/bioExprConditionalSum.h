@@ -9,7 +9,7 @@
 #ifndef bioExprConditionalSum_h
 #define bioExprConditionalSum_h
 
-#include <map>
+#include <unordered_map>
 #include "bioExpression.h"
 #include "bioString.h"
 
