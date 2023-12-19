@@ -461,8 +461,8 @@ void *computeFunctionForThread(void* fctPtr) {
 
 
 void *simulFunctionForThread(void* fctPtr) {
+  bioThreadArgSimul *input = (bioThreadArgSimul *) fctPtr;
   try {
-    bioThreadArgSimul *input = (bioThreadArgSimul *) fctPtr;
     bioSeveralExpressions* expressions = input->theFormulas.getExpressions() ;
     if (input->panel) {
       bioUInt individual ;
@@ -628,7 +628,13 @@ void biogeme::simulateSeveralFormulas(std::vector<std::vector<bioString> > formu
     }
   }
 
-  bioUInt N = data.size() ;
+  bioUInt N ;
+  if (panel) {
+    N = theDataMap.size() ;
+  }
+  else {
+    N = theData.size() ;
+  }
 
   for (bioUInt thread = 0 ; thread < nbrOfThreads ; ++thread) {
     pthread_join( theThreads[thread], NULL);
