@@ -37,3 +37,4 @@ build
 src/cythonbiogeme/cpp/cythonbiogeme.cpp
 src/cythonbiogeme.egg-info/
 .DS_Store
+src/cythonbiogeme/cpp/bioExprLog.cc.keep
