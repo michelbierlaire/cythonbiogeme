@@ -1,4 +1,5 @@
 # CythonBiogeme
+[![PyPi](https://img.shields.io/pypi/v/cythonbiogeme.svg)](https://pypi.python.org/pypi/cythonbiogeme)
 
 Biogeme is an open source freeware designed for the maximum likelihood estimation of parametric models in general, with a special emphasis on discrete choice models.
 CythonBiogeme is the part of the package that involves C++ code, to be installed separately.
