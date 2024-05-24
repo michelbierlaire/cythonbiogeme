@@ -4,6 +4,7 @@ build
 
 .idea/
 *.whl
+*.egg
 
 # Prerequisites
 *.d
