@@ -5,6 +5,7 @@ build
 .idea/
 *.whl
 *.egg
+*.tar.gz
 
 # Prerequisites
 *.d
