@@ -2,6 +2,9 @@ src/cythonbiogeme/__pycache__
 tests/__pycache__
 build
 
+.idea/
+*.whl
+
 # Prerequisites
 *.d
 
