@@ -116,3 +116,4 @@ extra-link-args = ["-std=c++11"]
 [tool.setuptools.extension-modules.cythonbiogeme.windows]
 extra-compile-args = ["-DMS_WIN64"]
 extra-link-args = ["-static", "-static-libstdc++", "-static-libgcc", "-lpthread", "-mms-bitfields", "-mwindows"]
+
