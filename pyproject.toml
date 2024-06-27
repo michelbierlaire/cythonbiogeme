@@ -12,7 +12,6 @@ name = "cythonbiogeme"
 version = "0.1.0"  # Update with the appropriate version or use dynamic versioning
 description = "C++ part of the Biogeme package"
 readme = "README.md"
-readme-content-type = "text/markdown"
 authors = [
     { name = "Michel Bierlaire", email = "michel.bierlaire@epfl.ch" }
 ]
@@ -30,6 +29,7 @@ classifiers = [
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: Implementation :: CPython"
 ]
+
 [project.urls]
 Homepage = "http://biogeme.epfl.ch"
 Documentation = "http://biogeme.epfl.ch/documents.html"
