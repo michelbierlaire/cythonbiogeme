@@ -16,11 +16,6 @@ readme-content-type = "text/markdown"
 authors = [
     { name = "Michel Bierlaire", email = "michel.bierlaire@epfl.ch" }
 ]
-urls = {
-    "Homepage": "http://biogeme.epfl.ch",
-    "Documentation": "http://biogeme.epfl.ch/documents.html",
-    "Code": "https://github.com/michelbierlaire/cythonbiogeme"
-}
 classifiers = [
     "Intended Audience :: Education",
     "Intended Audience :: Science/Research",
@@ -35,6 +30,10 @@ classifiers = [
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: Implementation :: CPython"
 ]
+[project.urls]
+Homepage = "http://biogeme.epfl.ch"
+Documentation = "http://biogeme.epfl.ch/documents.html"
+Code = "https://github.com/michelbierlaire/cythonbiogeme"
 
 [project.optional-dependencies]
 testing = [
