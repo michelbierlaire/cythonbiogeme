@@ -16,7 +16,7 @@ readme-content-type = "text/markdown"
 authors = [
     { name = "Michel Bierlaire", email = "michel.bierlaire@epfl.ch" }
 ]
-urls = { 
+urls = {
     "Homepage": "http://biogeme.epfl.ch",
     "Documentation": "http://biogeme.epfl.ch/documents.html",
     "Code": "https://github.com/michelbierlaire/cythonbiogeme"
