@@ -12,9 +12,15 @@ name = "cythonbiogeme"
 version = "0.1.0"  # Update with the appropriate version or use dynamic versioning
 description = "C++ part of the Biogeme package"
 readme = "README.md"
+readme-content-type = "text/markdown"
 authors = [
     { name = "Michel Bierlaire", email = "michel.bierlaire@epfl.ch" }
 ]
+urls = { 
+    "Homepage": "http://biogeme.epfl.ch",
+    "Documentation": "http://biogeme.epfl.ch/documents.html",
+    "Code": "https://github.com/michelbierlaire/cythonbiogeme"
+}
 classifiers = [
     "Intended Audience :: Education",
     "Intended Audience :: Science/Research",
@@ -30,11 +36,6 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: CPython"
 ]
 
-[project.urls]
-Homepage = "http://biogeme.epfl.ch"
-Documentation = "http://biogeme.epfl.ch/documents.html"
-Code = "https://github.com/michelbierlaire/cythonbiogeme"
-
 [project.optional-dependencies]
 testing = [
     "cython >= 0.29.32",
@@ -43,76 +44,3 @@ testing = [
     "pytest-cov >= 4.0.0",
     "tox >= 3.27.1"
 ]
-
-[tool.setuptools]
-package-dir = {"" = "src"}
-packages = ["cythonbiogeme"]
-
-[tool.setuptools.extension-modules.cythonbiogeme]
-sources = [
-    "src/cythonbiogeme/cpp/cythonbiogeme.pyx",
-    "src/cythonbiogeme/cpp/biogeme.cc",
-    "src/cythonbiogeme/cpp/evaluateExpressions.cc",
-    "src/cythonbiogeme/cpp/bioMemoryManagement.cc",
-    "src/cythonbiogeme/cpp/bioNormalCdf.cc",
-    "src/cythonbiogeme/cpp/bioFormula.cc",
-    "src/cythonbiogeme/cpp/bioSeveralFormulas.cc",
-    "src/cythonbiogeme/cpp/bioThreadMemory.cc",
-    "src/cythonbiogeme/cpp/bioThreadMemoryOneExpression.cc",
-    "src/cythonbiogeme/cpp/bioThreadMemorySimul.cc",
-    "src/cythonbiogeme/cpp/bioString.cc",
-    "src/cythonbiogeme/cpp/bioExprNormalCdf.cc",
-    "src/cythonbiogeme/cpp/bioExprIntegrate.cc",
-    "src/cythonbiogeme/cpp/bioExprGaussHermite.cc",
-    "src/cythonbiogeme/cpp/bioExprRandomVariable.cc",
-    "src/cythonbiogeme/cpp/bioExprMontecarlo.cc",
-    "src/cythonbiogeme/cpp/bioExprPanelTrajectory.cc",
-    "src/cythonbiogeme/cpp/bioExprDraws.cc",
-    "src/cythonbiogeme/cpp/bioExprDerive.cc",
-    "src/cythonbiogeme/cpp/bioExprMin.cc",
-    "src/cythonbiogeme/cpp/bioExprMax.cc",
-    "src/cythonbiogeme/cpp/bioExprAnd.cc",
-    "src/cythonbiogeme/cpp/bioExprOr.cc",
-    "src/cythonbiogeme/cpp/bioExprEqual.cc",
-    "src/cythonbiogeme/cpp/bioExprNotEqual.cc",
-    "src/cythonbiogeme/cpp/bioExprLessOrEqual.cc",
-    "src/cythonbiogeme/cpp/bioExprLess.cc",
-    "src/cythonbiogeme/cpp/bioExprGreaterOrEqual.cc",
-    "src/cythonbiogeme/cpp/bioExprGreater.cc",
-    "src/cythonbiogeme/cpp/bioExprElem.cc",
-    "src/cythonbiogeme/cpp/bioExprMultSum.cc",
-    "src/cythonbiogeme/cpp/bioExprLiteral.cc",
-    "src/cythonbiogeme/cpp/bioExprFreeParameter.cc",
-    "src/cythonbiogeme/cpp/bioExprFixedParameter.cc",
-    "src/cythonbiogeme/cpp/bioExprVariable.cc",
-    "src/cythonbiogeme/cpp/bioExprPlus.cc",
-    "src/cythonbiogeme/cpp/bioExprMinus.cc",
-    "src/cythonbiogeme/cpp/bioExprTimes.cc",
-    "src/cythonbiogeme/cpp/bioExprDivide.cc",
-    "src/cythonbiogeme/cpp/bioExprPower.cc",
-    "src/cythonbiogeme/cpp/bioExprUnaryMinus.cc",
-    "src/cythonbiogeme/cpp/bioExprExp.cc",
-    "src/cythonbiogeme/cpp/bioExprLog.cc",
-    "src/cythonbiogeme/cpp/bioExprLogzero.cc",
-    "src/cythonbiogeme/cpp/bioExprNumeric.cc",
-    "src/cythonbiogeme/cpp/bioExprLogLogit.cc",
-    "src/cythonbiogeme/cpp/bioExprLogLogitFullChoiceSet.cc",
-    "src/cythonbiogeme/cpp/bioExprLinearUtility.cc",
-    "src/cythonbiogeme/cpp/bioExpression.cc",
-    "src/cythonbiogeme/cpp/bioSeveralExpressions.cc",
-    "src/cythonbiogeme/cpp/bioExceptions.cc",
-    "src/cythonbiogeme/cpp/bioDerivatives.cc",
-    "src/cythonbiogeme/cpp/bioVectorOfDerivatives.cc",
-    "src/cythonbiogeme/cpp/bioGaussHermite.cc",
-    "src/cythonbiogeme/cpp/bioGhFunction.cc"
-]
-include-dirs = ["src", {eval = "import numpy; numpy.get_include()"}]
-language = "c++"
-extra-compile-args = ["-std=c++11"]
-extra-link-args = ["-std=c++11"]
-
-# Windows-specific settings
-[tool.setuptools.extension-modules.cythonbiogeme.windows]
-extra-compile-args = ["-DMS_WIN64"]
-extra-link-args = ["-static", "-static-libstdc++", "-static-libgcc", "-lpthread", "-mms-bitfields", "-mwindows"]
-
