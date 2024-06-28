@@ -1,11 +1,11 @@
-import setuptools
-import os
+from setuptools import setup, Extension
+from Cython.Build import cythonize
+import numpy
 import platform
 
 def get_ext_modules():
-    from Cython.Build import cythonize
     ext_modules = [
-        setuptools.Extension(
+        Extension(
             "cythonbiogeme",
             sources=[
                 "src/cythonbiogeme/cpp/cythonbiogeme.pyx",
@@ -64,7 +64,7 @@ def get_ext_modules():
                 "src/cythonbiogeme/cpp/bioGaussHermite.cc",
                 "src/cythonbiogeme/cpp/bioGhFunction.cc",
             ],
-            include_dirs=["src", get_numpy_include()],
+            include_dirs=["src", numpy.get_include()],
             language="c++",
             extra_compile_args=["-std=c++11"],
             extra_link_args=["-std=c++11"]
@@ -77,34 +77,6 @@ def get_ext_modules():
         ])
     return cythonize(ext_modules)
 
-def get_numpy_include():
-    import numpy
-    return numpy.get_include()
-
-setuptools.setup(
-    name="cythonbiogeme",
-    version="0.1.0",  # Update with the appropriate version or use dynamic versioning
-    description="C++ part of the Biogeme package",
-    long_description=open("README.md").read(),
-    long_description_content_type="text/markdown",
-    author="Michel Bierlaire",
-    author_email="michel.bierlaire@epfl.ch",
-    url="http://biogeme.epfl.ch",
-    packages=setuptools.find_packages(where="src"),
-    package_dir={"": "src"},
-    install_requires=[
-        "cython>=0.29.16",
-        "pandas>=1.3.5"
-    ],
-    extras_require={
-        "testing": [
-            "cython>=0.29.32",
-            "numpy>=1.23.4",
-            "pytest>=7.2.0",
-            "pytest-cov>=4.0.0",
-            "tox>=3.27.1"
-        ]
-    },
+setup(
     ext_modules=get_ext_modules(),
-    include_package_data=True
 )
