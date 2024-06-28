@@ -36,25 +36,25 @@ const bioDerivatives* bioExprNormalCdf::getValueAndDerivatives(std::vector<bioUI
     bioReal thePdf = invSqrtTwoPi * exp(- childResult->f * childResult->f / 2.0) ;
     for (bioUInt i = 0 ; i < n ; ++i) {
       if (childResult->g[i] == 0.0) {
-	theDerivatives.g[i] = 0.0 ;
+        theDerivatives.g[i] = 0.0 ;
       }
       else {
-	theDerivatives.g[i] = thePdf * childResult->g[i] ;
+	    theDerivatives.g[i] = thePdf * childResult->g[i] ;
       }
       if (hessian) {
-	for (bioUInt j = i ; j < n ; ++j) {
-	  if (childResult->h[i][j] != 0.0) {
-	    theDerivatives.h[i][j] = thePdf * childResult->h[i][j] ;
-	  }
-	  else {
-	    theDerivatives.h[i][j] = 0.0 ;
-	  }
-	  if (childResult->f != 0.0 && 
-	      childResult->g[i] != 0 && 
-	      childResult->g[j] != 0) {
-	    theDerivatives.h[i][j] -= thePdf * childResult->f * childResult->g[i] * childResult->g[j] ;
-	  }
-	}
+	    for (bioUInt j = i ; j < n ; ++j) {
+	      if (childResult->h[i][j] != 0.0) {
+	        theDerivatives.h[i][j] = thePdf * childResult->h[i][j] ;
+	      }
+	      else {
+	        theDerivatives.h[i][j] = 0.0 ;
+	      }
+	      if (childResult->f != 0.0 &&
+	          childResult->g[i] != 0 &&
+	          childResult->g[j] != 0) {
+	        theDerivatives.h[i][j] -= thePdf * childResult->f * childResult->g[i] * childResult->g[j] ;
+	      }
+	    }
       }
     }
   }
@@ -62,10 +62,11 @@ const bioDerivatives* bioExprNormalCdf::getValueAndDerivatives(std::vector<bioUI
     bioUInt n = literalIds.size() ;
     for (bioUInt i = 0 ; i < n ; ++i) {
       for (bioUInt j = i ; j < n ; ++j) {
-	theDerivatives.h[j][i] = theDerivatives.h[i][j] ;
+	    theDerivatives.h[j][i] = theDerivatives.h[i][j] ;
       }
     }
   }
+  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 

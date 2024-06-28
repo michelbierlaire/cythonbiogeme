@@ -434,13 +434,13 @@ def _str_to_bool(value):
         return False
     raise ValueError('invalid boolean string %r' % value)
 
-
-if platform.system() == "Darwin":
-    os.environ["CC"] = "clang++"
-    os.environ["CXX"] = "clang++"
-else:
-    os.environ["CC"] = "g++"
-    os.environ["CXX"] = "g++"
+os.getenv('CXX', 'clang++' if platform.system() == 'Darwin' else 'g++')
+#if platform.system() == "Darwin":
+#    os.environ["CC"] = "clang++"
+#    os.environ["CXX"] = "clang++"
+#else:
+#    os.environ["CC"] = "g++"
+#    os.environ["CXX"] = "g++"
 
 
 setup()

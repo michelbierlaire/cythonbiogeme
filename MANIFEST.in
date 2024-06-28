@@ -2,3 +2,6 @@ recursive-include src *
 recursive-include *.py swissmetro.dat
 recursive-include tests *.py *.dat
 include cysetuptools.py
+recursive-exclude * __pycache__
+recursive-exclude * *.py[cod]
+recursive-exclude * *.so

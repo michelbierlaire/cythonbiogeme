@@ -11,6 +11,8 @@
 #include <sstream>
 #include "bioDebug.h"
 #include "bioExceptions.h"
+#include "bioConstants.h"
+
 
 
 bioExprDerive::bioExprDerive(bioExpression* c, bioUInt lid) :
@@ -41,6 +43,7 @@ const bioDerivatives* bioExprDerive::getValueAndDerivatives(std::vector<bioUInt>
     throw bioExceptNullPointer(__FILE__,__LINE__,"derivatives") ;
   }
   theDerivatives.f = childResult->g[0] ;
+  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 
