@@ -45,4 +45,5 @@ testing = [
 ]
 
 [tool.setuptools.dynamic]
-version = { attr = "cythonbiogeme.version.__version__", module = "src.cythonbiogeme" }
+version = { attr = "cythonbiogeme.version.__version__", file = "src/cythonbiogeme/version.py" }
+
