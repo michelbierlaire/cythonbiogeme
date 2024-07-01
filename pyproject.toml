@@ -5,7 +5,6 @@ requires = [
     "numpy>=1.19.0",
     "Cython",
 ]
-build-backend = "setuptools.build_meta"
 
 [project]
 name = "cythonbiogeme"
