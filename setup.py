@@ -5,7 +5,7 @@ import platform
 
 def get_ext_modules():
     ext_modules = [
-        setuptools.Extension(
+        Extension(
             "cythonbiogeme.cythonbiogeme",
             sources=[
                 "src/cythonbiogeme/cpp/cythonbiogeme.pyx",
