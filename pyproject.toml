@@ -44,5 +44,9 @@ testing = [
     "tox >= 3.27.1"
 ]
 
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["cythonbiogeme"]
+
 [tool.setuptools.dynamic]
 version = { attr = "cythonbiogeme.version.__version__" }
