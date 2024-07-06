@@ -28,6 +28,7 @@ const bioDerivatives* bioExprAnd::getValueAndDerivatives(std::vector<bioUInt> li
 						     bioBoolean gradient,
 						     bioBoolean hessian) {
 
+
   theDerivatives.with_g = gradient ;
   theDerivatives.with_h = hessian ;
 

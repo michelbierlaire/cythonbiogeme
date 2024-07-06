@@ -34,8 +34,9 @@ theDerivatives.with_g = gradient ;
   bioUInt n = literalIds.size() ;
   theDerivatives.resize(n) ;
 
-  static const bioReal sqrt_max_float = constants::get_sqrt_max_float();
-  static const bioReal sqrt_machine_epsilon = constants::get_sqrt_machine_epsilon();
+  static const bioReal upper_bound = constants::get_upper_bound();
+  static const bioReal almost_zero = constants::get_almost_zero();
+  static const bioReal slope = (log(almost_zero) + upper_bound) / almost_zero;
 
 
   const bioDerivatives* childResult = child->getValueAndDerivatives(literalIds,gradient,hessian) ;
@@ -48,7 +49,7 @@ theDerivatives.with_g = gradient ;
         theDerivatives.g[i] = 0.0 ;
         if (hessian) {
           theDerivatives.h[i][i] = 0 ;
-	      for (bioUInt j = i+1 ; j < n ; ++j) {
+	      for (bioUInt j = 0 ; j < n ; ++j) {
 	        theDerivatives.h[i][j] = theDerivatives.h[j][i] = 0.0 ;
 	      }
 	    }
@@ -56,7 +57,7 @@ theDerivatives.with_g = gradient ;
 	}
 	return &theDerivatives ;
   }
-  if (cf < -sqrt_machine_epsilon) {
+  if (cf < 0) {
     std::stringstream str ;
     str << "Current values of the literals: " << std::endl ;
     std::map<bioString,bioReal> m = getAllLiteralValues() ;
@@ -68,58 +69,48 @@ theDerivatives.with_g = gradient ;
     if (rowIndex != NULL) {
 	  str << "row number: " << *rowIndex << ", ";
     }
-
     str << "Cannot take the log of a non positive number [" << childResult->f << "]" << std::endl ;
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
   }
 
 
-  if (cf < sqrt_machine_epsilon) {
-    theDerivatives.f = -sqrt_max_float ;
+  if (cf < almost_zero) {
+    theDerivatives.f = log(almost_zero) * cf / almost_zero
+      - (1 - cf/almost_zero) * upper_bound ;
     if (gradient) {
       for (bioUInt i = 0 ; i < n ; ++i) {
-        theDerivatives.g[i] = sqrt_max_float ;
+        theDerivatives.g[i] = slope * childResult->g[i] ;
         if (hessian) {
           theDerivatives.h[i][i] = 0 ;
-	      for (bioUInt j = i+1 ; j < n ; ++j) {
-	        theDerivatives.h[i][j] = theDerivatives.h[j][i] = 0.0 ;
+	      for (bioUInt j = i ; j < n ; ++j) {
+	        theDerivatives.h[i][j] = slope * childResult->h[i][j];
+	        if (i != j) {
+              theDerivatives.h[j][i] = theDerivatives.h[i][j] ;
+            }
 	      }
 	    }
 	  }
 	}
-	return &theDerivatives ;
-  }
-  bioReal the_log = log(cf) ;
-  if (the_log > sqrt_max_float) {
-    theDerivatives.f = sqrt_max_float ;
-    if (gradient) {
-      for (bioUInt i = 0 ; i < n ; ++i) {
-        theDerivatives.g[i] = sqrt_max_float ;
-        if (hessian) {
-          theDerivatives.h[i][i] = 0.0 ;
-	      for (bioUInt j = i+1 ; j < n ; ++j) {
-	        theDerivatives.h[i][j] = theDerivatives.h[j][i] = 0.0 ;
-
-	      }
-	    }
-	  }
-	}
-	return &theDerivatives ;
+	theDerivatives.dealWithNumericalIssues() ;
+    return &theDerivatives ;
   }
 
-  theDerivatives.f = the_log ;
-
+  theDerivatives.f = log(cf) ;
   if (gradient) {
     for (bioUInt i = 0 ; i < n ; ++i) {
       theDerivatives.g[i] = childResult->g[i] / cf ;
       if (hessian) {
-	    for (bioUInt j = 0 ; j < n ; ++j) {
+	    for (bioUInt j = i ; j < n ; ++j) {
 	      bioReal fsquare = cf * cf ;
 	      theDerivatives.h[i][j] = childResult->h[i][j] / cf - childResult->g[i] *  childResult->g[j] / fsquare ;
+	      if (i != j) {
+              theDerivatives.h[j][i] = theDerivatives.h[i][j] ;
+          }
 	    }
       }
     }
   }
+  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 

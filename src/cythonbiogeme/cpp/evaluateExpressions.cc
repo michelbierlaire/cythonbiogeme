@@ -293,7 +293,7 @@ void *computeFunctionForThreadExpression(void* fctPtr) {
       for (individual = input->startData ;
 	   individual < input->endData ;
 	   ++individual) {
-      
+
 	const bioDerivatives* fgh = myExpression->getValueAndDerivatives(*input->literalIds,
 									 input->calcGradient,
 									 input->calcHessian) ;
@@ -310,14 +310,13 @@ void *computeFunctionForThreadExpression(void* fctPtr) {
       // No panel data
       bioUInt row ;
       if (myExpression == NULL) {
-	throw bioExceptNullPointer(__FILE__,__LINE__,"thread memory") ;
+	    throw bioExceptNullPointer(__FILE__,__LINE__,"thread memory") ;
       }
       myExpression->setIndividualIndex(&row) ;
       myExpression->setRowIndex(&row) ;
       for (row = input->startData ;
 	   row < input->endData ;
 	   ++row) {
-	
 	try {
 
 	  const bioDerivatives* fgh = myExpression->getValueAndDerivatives(*input->literalIds,
@@ -329,6 +328,7 @@ void *computeFunctionForThreadExpression(void* fctPtr) {
 	  else {
 	    input->theDerivatives.disaggregate(*fgh) ;
 	  }
+
 	}
 	catch(bioExceptions& e) {
 	  std::stringstream str ;

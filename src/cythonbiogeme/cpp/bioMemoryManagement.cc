@@ -20,6 +20,7 @@
 #include "bioExprTimes.h"
 #include "bioExprDivide.h"
 #include "bioExprPower.h"
+#include "bioExprPowerConstant.h"
 #include "bioExprAnd.h"
 #include "bioExprOr.h"
 #include "bioExprEqual.h"
@@ -137,6 +138,12 @@ void bioMemoryManagement::releaseAllMemory() {
     delete(*i) ;
   }
   a_bioExprPower.clear() ;
+  for (std::vector<bioExprPowerConstant*>::iterator i = a_bioExprPowerConstant.begin() ;
+       i != a_bioExprPowerConstant.end() ;
+       ++i) {
+    delete(*i) ;
+  }
+  a_bioExprPowerConstant.clear() ;
   for (std::vector<bioExprAnd*>::iterator i = a_bioExprAnd.begin() ;
        i != a_bioExprAnd.end() ;
        ++i) {
@@ -407,6 +414,12 @@ bioExprDivide* bioMemoryManagement::get_bioExprDivide(bioExpression* ell, bioExp
 bioExprPower* bioMemoryManagement::get_bioExprPower(bioExpression* ell, bioExpression* r) {
   bioExprPower* ptr = new bioExprPower(ell, r) ;
   a_bioExprPower.push_back(ptr) ;
+  return ptr ;
+}
+
+bioExprPowerConstant* bioMemoryManagement::get_bioExprPowerConstant(bioExpression* ell, bioReal exponent) {
+  bioExprPowerConstant* ptr = new bioExprPowerConstant(ell, exponent) ;
+  a_bioExprPowerConstant.push_back(ptr) ;
   return ptr ;
 }
 

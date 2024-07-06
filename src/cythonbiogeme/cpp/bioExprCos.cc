@@ -33,19 +33,19 @@ const bioDerivatives* bioExprCos::getValueAndDerivatives(std::vector<bioUInt> li
   theDerivatives.resize(n) ;
 
   const bioDerivatives* child_result = child->getValueAndDerivatives(literalIds,gradient,hessian) ;
-  bioReal cos_f = cos(child_result->f) ;
+  bioReal cos_f = std::cos(child_result->f) ;
   theDerivatives.f = cos_f ;
   if (gradient) {
-    bioReal sin_f = sin(child_result->f) ;
+    bioReal sin_f = std::sin(child_result->f) ;
     for (bioUInt i = 0 ; i < n ; ++i) {
       theDerivatives.g[i] = - child_result->g[i] * sin_f ;
       if (hessian) {
-	for (bioUInt j = 0 ; j <= i ; ++j) {
-	  theDerivatives.h[i][j] = -cos_f * child_result->g[i] * child_result->g[j] - sin_f * child_result->h[i][j] ;
-	  if (i != j) {
-	    theDerivatives.h[j][i] = theDerivatives.h[i][j] ;
-	  }
-	}
+	    for (bioUInt j = 0 ; j <= i ; ++j) {
+	      theDerivatives.h[i][j] = -cos_f * child_result->g[i] * child_result->g[j] - sin_f * child_result->h[i][j] ;
+	      if (i != j) {
+	        theDerivatives.h[j][i] = theDerivatives.h[i][j] ;
+	      }
+	    }
       }
     }
   }

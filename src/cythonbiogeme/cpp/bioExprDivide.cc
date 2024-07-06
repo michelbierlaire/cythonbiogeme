@@ -11,6 +11,8 @@
 #include <sstream>
 #include "bioDebug.h"
 #include "bioExceptions.h"
+#include "bioConstants.h"
+
 
 bioExprDivide::bioExprDivide(bioExpression* l, bioExpression* r) :
   left(l), right(r) {
@@ -31,6 +33,10 @@ const bioDerivatives* bioExprDivide::getValueAndDerivatives(std::vector<bioUInt>
     throw bioExceptions(__FILE__,__LINE__,"If the hessian is needed, the gradient must be computed") ;
   }
 
+  static const bioReal upper_bound = constants::get_upper_bound();
+  static const bioReal almost_zero = constants::get_almost_zero();
+  static const bioReal xi_square = almost_zero * almost_zero ;
+
   theDerivatives.with_g = gradient ;
   theDerivatives.with_h = hessian ;
 
@@ -39,140 +45,121 @@ const bioDerivatives* bioExprDivide::getValueAndDerivatives(std::vector<bioUInt>
   
 
   const bioDerivatives* leftResult = left->getValueAndDerivatives(literalIds,gradient,hessian) ;
-  const bioDerivatives* rightResult = NULL ;
-  bioReal rightValue ;
-  if (leftResult->f == 0.0 && !hessian) {
-    // No need to calculate the derivatives of the other term
-    rightValue = right->getValue() ;
-  }
-  else {
-    rightResult = right->getValueAndDerivatives(literalIds,gradient,hessian) ;
-    rightValue = rightResult->f ;
-  }
-
+  const bioDerivatives* rightResult = right->getValueAndDerivatives(literalIds,gradient,hessian) ;
+  bioReal rightValue = rightResult->f ;
   bioReal rSquare = rightValue * rightValue ;
   bioReal rCube = rSquare * rightValue ;
 
-  if (leftResult->f == 0.0) {
-    // l = 0
-    if (rightValue  == 0.0) {
-      // l= 0, r = 0
+  // Denominator is away from zero
+  if ((rightValue >= almost_zero) || (rightValue <= -almost_zero)) {
+    // Numerator is zero
+    if (leftResult-> f == 0) {
       theDerivatives.f = 0.0 ;
       if (gradient) {
-	for (bioUInt i = 0 ; i < n ; ++i) {
-	  theDerivatives.g[i] = 0.0 ;
-	}
-      }
-    } 
-    else if (rightValue == 1.0) {
-      // l = 0, r = 1
-      theDerivatives.f = 0.0 ;
-      if (gradient) {
-	for (bioUInt i = 0 ; i < n ; ++i) {
-	  theDerivatives.g[i] = leftResult->g[i] ;
-	}
-      }
+	    for (bioUInt i = 0 ; i < n ; ++i) {
+	      theDerivatives.g[i] = leftResult->g[i] / rightValue;
+	      if (hessian) {
+            for (bioUInt j = i ; j < n ; ++j) {
+              theDerivatives.h[i][j] =
+              leftResult->h[i][j] / rightValue
+              - leftResult->g[i] * rightResult->g[j] / rSquare
+              - leftResult->g[j] * rightResult->g[i] / rSquare ;
+              if (i != j) {
+                theDerivatives.h[j][i] = theDerivatives.h[i][j] ;
+              }
+            }
+          }
+        }
+	  }
+	  theDerivatives.dealWithNumericalIssues() ;
+      return &theDerivatives ;
     }
-    else {
-      // l=0, r != 0, r != 1
-      theDerivatives.f =  0.0 ;
+    // Denominator is 1.0
+    if (rightValue == 1.0) {
+      theDerivatives.f = leftResult->f ;
       if (gradient) {
-	for (bioUInt i = 0 ; i < n ; ++i) {
-	  if (leftResult->g[i] == 0) {
+	    for (bioUInt i = 0 ; i < n ; ++i) {
+	      theDerivatives.g[i] = leftResult->g[i] - leftResult->f * rightResult->g[i] ;
+	      if (hessian) {
+            for (bioUInt j = i ; j < n ; ++j) {
+              theDerivatives.h[i][j] =
+              leftResult->h[i][j]
+              - leftResult->g[i] * rightResult->g[j]
+              - leftResult->g[j] * rightResult->g[i]
+              + 2.0 * leftResult->f * rightResult->g[i] * rightResult->g[j]
+              - leftResult->f * rightResult->h[i][j] ;
+              if (i != j) {
+              theDerivatives.h[j][i] = theDerivatives.h[i][j] ;
+              }
+            }
+          }
+        }
+	  }
+	  theDerivatives.dealWithNumericalIssues() ;
+	  return &theDerivatives ;
+    }
+    // General case
+    theDerivatives.f = leftResult->f / rightValue ;
+    if (gradient) {
+	  for (bioUInt i = 0 ; i < n ; ++i) {
 	    theDerivatives.g[i] = 0.0 ;
-	  }
-	  else {
-	    theDerivatives.g[i] = leftResult->g[i] / rightValue ;
-	  }
-	}
+	    if (leftResult->g[i] != 0.0) {
+	      theDerivatives.g[i] += leftResult->g[i] / rightValue ;
+	    }
+	    if (rightResult->g[i] != 0.0) {
+	      theDerivatives.g[i] -= leftResult->f * rightResult->g[i] / rSquare ;
+	    }
+	    if (hessian) {
+          for (bioUInt j = i ; j < n ; ++j) {
+            theDerivatives.h[i][j] =
+            leftResult->h[i][j] / rightValue
+            - leftResult->g[i] * rightResult->g[j] / rSquare
+            - leftResult->g[j] * rightResult->g[i] / rSquare
+            + 2.0 * leftResult->f * rightResult->g[i] * rightResult->g[j] / rCube
+            - leftResult->f * rightResult->h[i][j] / rSquare ;
+            if (i != j) {
+              theDerivatives.h[j][i] = theDerivatives.h[i][j] ;
+            }
+          }
+        }
       }
-    }
+	}
+	theDerivatives.dealWithNumericalIssues() ;
+	return &theDerivatives ;
+  }
+
+  // Denominator close to zero, positive case
+
+  if (rightValue >= 0) {
+      theDerivatives.f = leftResult->f * rightValue / xi_square + (1.0 - rightValue / almost_zero) * upper_bound ;
   }
   else {
-    // l != 0
-    if (rightValue == 0.0) {
-      // l != 0, r = 0
-      theDerivatives.f =  bioMaxReal ;
-      if (gradient) {
+      theDerivatives.f = leftResult->f * rightValue / xi_square - (1.0 + rightValue / almost_zero) * upper_bound ;
+ }
+
+  if (gradient) {
 	for (bioUInt i = 0 ; i < n ; ++i) {
-	  theDerivatives.g[i] = bioMaxReal ;
-	}
-      }
-    }
-    else if (rightValue == 1.0) {
-      // l != 0, r = 1
-      theDerivatives.f =  leftResult->f ;
-      if (gradient) {
-	for (bioUInt i = 0 ; i < n ; ++i) {
-	  if (leftResult->g[i] == 0.0) {
-	    if (rightResult->g[i] == 0.0) {
-	      theDerivatives.g[i] = 0.0 ;
-	    } 
-	    else {
-	      theDerivatives.g[i] = - rightResult->g[i] * leftResult->f ;
-	    }
-	  }
-	  else {
-	    if (rightResult->g[i] == 0.0) {
-	      theDerivatives.g[i] = leftResult->g[i] ;
-	    } 
-	    else {
-	      theDerivatives.g[i] = leftResult->g[i] - rightResult->g[i] * leftResult->f ;
-	    }
-	  }
-	}
-      }
-    }
-    else {
-      // l != 0, r != 0, r != 1
-      theDerivatives.f =  leftResult->f / rightResult->f ;
-      if (gradient) {
-	for (bioUInt i = 0 ; i < n ; ++i) {
-	  bioReal num = (leftResult->g[i] * rightResult->f -
-			 rightResult->g[i] * leftResult->f) ;
-	  if (num != 0.0) {
-	    theDerivatives.g[i] = num / rSquare ;
-	  }
-	  else {
-	    theDerivatives.g[i] = 0.0 ;
-	  }
-	}
+	  theDerivatives.g[i] =
+	    (rightResult->g[i] * leftResult->f + rightValue * leftResult->g[i]) / xi_square
+	    - rightResult->g[i] * upper_bound / almost_zero ;
+	  if (hessian) {
+        for (bioUInt j = i ; j < n ; ++j) {
+          theDerivatives.h[i][j] =
+            (
+              leftResult->g[i] * rightResult->g[j]
+            + leftResult->g[j] * rightResult->g[i]
+            + leftResult->h[i][j] * rightValue
+            + rightResult->h[i][j] * leftResult->f
+             ) / xi_square
+             - rightResult->h[i][j] * upper_bound / almost_zero ;
+          if (i != j) {
+              theDerivatives.h[j][i] = theDerivatives.h[i][j] ;
+          }
+        }
       }
     }
   }
-
-  if (hessian) {
-    for (bioUInt i = 0 ; i < n ; ++i) {
-      for (bioUInt j = i ; j < n ; ++j) {
-	bioReal v ;
-	if (leftResult->f != 0.0) {
-	  bioReal rhs = rightResult->h[i][j] ;
-	  v = - leftResult->f * rhs / rSquare ;
-	  if (rightResult->g[i] != 0.0 && rightResult->g[j] != 0.0) {
-	    v += 2.0 * leftResult->f * rightResult->g[i] * rightResult->g[j] / rCube ;
-	  }
-	}
-	else {
-	  v = 0.0 ;
-	}
-	bioReal lhs = leftResult->h[i][j] ;
-	if (lhs != 0.0) {
-	  v += lhs / rightValue ;
-	}
-	if (rightResult != NULL) {
-	  if (leftResult->g[i] != 0.0 && rightResult->g[j] != 0.0) {
-	    v -=  leftResult->g[i] * rightResult->g[j] / rSquare ;
-	  }
-	  if (leftResult->g[j] != 0.0 && rightResult->g[i] != 0.0) {
-	    v -=  leftResult->g[j] * rightResult->g[i] / rSquare ;
-	  }
-	}
-	theDerivatives.h[i][j] = theDerivatives.h[j][i] = v ;
-      }
-    }
-  }
-  
-
+  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 

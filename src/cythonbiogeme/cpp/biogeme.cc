@@ -21,7 +21,7 @@
 #include "bioThreadMemorySimul.h"
 #include "bioExpression.h"
 #include "bioSeveralExpressions.h"
-//#include "bioCfsqp.h"
+#include "bioConstants.h"
 
 // Dealing with exceptions across threads
 static std::exception_ptr theExceptionPtr = nullptr ;
@@ -66,6 +66,7 @@ bioReal biogeme::applyTheFormula(  std::vector<bioReal>* g,
 				   std::vector< std::vector<bioReal> >* h,
 				   std::vector< std::vector<bioReal> >* bh) {
 
+   static const bioReal upper_bound = constants::get_upper_bound();
   if ( g != NULL) {
     if (g->size() != theThreadMemory.dimension()) {
       std::stringstream str ;
@@ -88,8 +89,7 @@ bioReal biogeme::applyTheFormula(  std::vector<bioReal>* g,
     }
   }
 
-  
-  //  std::vector<bioThreadArg*> theInput(nbrOfThreads) ;
+   //  std::vector<bioThreadArg*> theInput(nbrOfThreads) ;
   std::vector<pthread_t> theThreads(nbrOfThreads) ;
   for (bioUInt thread = 0 ; thread < nbrOfThreads ; ++thread) {
     if (theInput[thread] == NULL) {
@@ -110,7 +110,6 @@ bioReal biogeme::applyTheFormula(  std::vector<bioReal>* g,
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
   }
-
   bioReal result(0.0) ;
   if (g != NULL) {
     std::fill(g->begin(),g->end(),0.0) ;
@@ -127,61 +126,40 @@ bioReal biogeme::applyTheFormula(  std::vector<bioReal>* g,
       std::rethrow_exception(theExceptionPtr);
     }
     result += theInput[thread]->result ;
+    result = std::min(upper_bound, std::max(-upper_bound, result));
     if (g != NULL) {
       for (bioUInt i = 0 ; i < g->size() ; ++i) {
-	(*g)[i] += (theInput[thread]->grad)[i] ;
-	if ( h != NULL) {
-	  for (bioUInt j = i ; j < g->size() ; ++j) {
-	    (*h)[i][j] += (theInput[thread]->hessian)[i][j] ;
-	  }
-	}
-	if (bh != NULL) {
-	  for (bioUInt j = i ; j < g->size() ; ++j) {
-	    (*bh)[i][j] += (theInput[thread]->bhhh)[i][j] ;
-	  }
-	}
+	    (*g)[i] += (theInput[thread]->grad)[i] ;
+	    (*g)[i] = std::min(upper_bound, std::max(-upper_bound, (*g)[i]));
+	    if ( h != NULL) {
+	      for (bioUInt j = i ; j < g->size() ; ++j) {
+	        (*h)[i][j] += (theInput[thread]->hessian)[i][j] ;
+	        (*h)[i][j] = std::min(upper_bound, std::max(-upper_bound, (*h)[i][j]));
+	      }
+	    }
+	    if (bh != NULL) {
+	      for (bioUInt j = i ; j < g->size() ; ++j) {
+	        (*bh)[i][j] += (theInput[thread]->bhhh)[i][j] ;
+	        (*bh)[i][j] = std::min(upper_bound, std::max(-upper_bound, (*bh)[i][j]));
+	      }
+	    }
       }
     }
   }
 
-  if (!std::isfinite(result)) {
-    result = -std::numeric_limits<bioReal>::max() ;
-  }
 
-  if (g != NULL) {
-    for (bioUInt i = 0 ; i < g->size() ; ++i) {
-      if (!std::isfinite((*g)[i])) {
-	(*g)[i] = -std::numeric_limits<bioReal>::max() ;
-      }
-      if ( h != NULL) {
-	for (bioUInt j = i ; j < g->size() ; ++j) {
-	  if (!std::isfinite((*h)[i][j])) {
-	    (*h)[i][j] = -std::numeric_limits<bioReal>::max() ;
-	  }
-	}
-      }
-      if ( bh != NULL) {
-	for (bioUInt j = i ; j < g->size() ; ++j) {
-	  if (!std::isfinite((*bh)[i][j])) {
-	    (*bh)[i][j] = -std::numeric_limits<bioReal>::max() ;
-	  }
-	}
-      }
-    }
-  }
-  
   // Fill the symmetric part of the matrices
   if (h != NULL) {
     for (bioUInt i = 0 ; i < g->size() ; ++i) {
       for (bioUInt j = i+1 ; j < g->size() ; ++j) {
-	(*h)[j][i] = (*h)[i][j] ;
+	    (*h)[j][i] = (*h)[i][j] ;
       }
     }
   }
   if (bh != NULL) {
     for (bioUInt i = 0 ; i < g->size() ; ++i) {
       for (bioUInt j = i+1 ; j < g->size() ; ++j) {
-	(*bh)[j][i] = (*bh)[i][j] ;
+	    (*bh)[j][i] = (*bh)[i][j] ;
       }
     }
   }
@@ -318,7 +296,6 @@ void *computeFunctionForThread(void* fctPtr) {
 	std::fill(input->bhhh.begin(),input->bhhh.end(),input->grad) ;
       }
     }
-
     bioExpression* myLoglike = input->theLoglike.getExpression() ;
     if (input->panel) {
       // Panel data
@@ -374,7 +351,7 @@ void *computeFunctionForThread(void* fctPtr) {
       // No panel data
       bioUInt row ;
       if (myLoglike == NULL) {
-	throw bioExceptNullPointer(__FILE__,__LINE__,"thread memory") ;
+	    throw bioExceptNullPointer(__FILE__,__LINE__,"thread memory") ;
       }
       myLoglike->setIndividualIndex(&row) ;
       myLoglike->setRowIndex(&row) ;
@@ -387,6 +364,7 @@ void *computeFunctionForThread(void* fctPtr) {
 	   row < input->endData ;
 	   ++row) {
 
+
 	// if (row % 100 == 0) {
 	//   DEBUG_MESSAGE("Row " << row) ;
 	// }
@@ -395,12 +373,10 @@ void *computeFunctionForThread(void* fctPtr) {
 	    w = input->theWeight.getExpression()->getValue() ;
 	  }
 
-	  //	  DEBUG_MESSAGE("getValueAndDerivatives") ;
 	  const bioDerivatives* fgh = myLoglike->getValueAndDerivatives(*input->literalIds,
 						  input->calcGradient,
 						  input->calcHessian) ;
 
-	  //	  DEBUG_MESSAGE("getValueAndDerivatives: done") ;
 	  if (!input->theWeight.isDefined()) {
 	    input->result += fgh->f ;
 

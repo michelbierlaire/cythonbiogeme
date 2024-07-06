@@ -5,34 +5,35 @@
 #include <cmath>
 #include <iomanip>
 #include "bioTypes.h"
+#include "bioExceptions.h"
 
 namespace constants {
 
-  // Function to calculate and cache the sqrt_max_float at runtime
-  inline bioReal get_sqrt_max_float() {
+  // Function to calculate and cache the upper bound on floating values
+  inline bioReal get_upper_bound() {
     static const bioReal sqrt_max_float = std::sqrt(std::numeric_limits<bioReal>::max());
     return sqrt_max_float;
   }
 
-  inline bioReal get_sqrt_machine_epsilon() {
-    static const bioReal sqrt_machine_epsilon = std::sqrt(std::numeric_limits<bioReal>::epsilon());
-    return sqrt_machine_epsilon;
-  }
+  //inline bioReal get_machine_epsilon() {
+  //  return std::sqrt(std::numeric_limits<bioReal>::epsilon());
+  //}
 
-  inline bioReal log_sqrt_max_float() {
-    return std::log(get_sqrt_max_float());
+  inline bioReal get_almost_zero() {
+    static const bioReal machine_epsilon = std::numeric_limits<bioReal>::epsilon();
+    return machine_epsilon;
   }
 
 }
 
 inline void validate(bioReal alpha) {
-bioReal sqrt_max_float = constants::get_sqrt_max_float();
-if (alpha > sqrt_max_float || alpha < -sqrt_max_float) {
+bioReal upper_bound = constants::get_upper_bound();
+if (alpha > upper_bound || alpha < -upper_bound) {
     std::stringstream str ;
     str << "The input value must be between  ["
-    << std::setprecision(3) << std::scientific << -sqrt_max_float
+    << std::setprecision(3) << std::scientific << -upper_bound
     << " and "
-    << std::setprecision(3) << std::scientific << sqrt_max_float
+    << std::setprecision(3) << std::scientific << upper_bound
     << "]. Invalid value: "
     << alpha << std::endl ;
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
@@ -40,11 +41,11 @@ if (alpha > sqrt_max_float || alpha < -sqrt_max_float) {
 }
 
 inline bioReal project(bioReal alpha) {
-    bioReal sqrt_max_float = constants::get_sqrt_max_float();
-    if (alpha >= sqrt_max_float) {
-        return sqrt_max_float;
-    } else if (alpha <= -sqrt_max_float) {
-        return -sqrt_max_float;
+    bioReal upper_bound = constants::get_upper_bound();
+    if (alpha >= upper_bound) {
+        return upper_bound;
+    } else if (alpha <= -upper_bound) {
+        return -upper_bound;
     } else {
         return alpha;
     }

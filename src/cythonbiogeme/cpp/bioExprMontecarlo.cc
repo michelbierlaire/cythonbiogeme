@@ -43,7 +43,7 @@ const bioDerivatives* bioExprMontecarlo::getValueAndDerivatives(std::vector<bioU
     theDerivatives.f += project(childResult->f) ;
     if (gradient) {
       for (bioUInt i = 0 ; i < n ; ++i) {
-	    theDerivatives.g[i] += childResult->g[i] ;
+        theDerivatives.g[i] += childResult->g[i] ;
 	    if (hessian) {
 	      for (bioUInt j = i ; j < n ; ++j) {
 	        theDerivatives.h[i][j] += childResult->h[i][j] ;
@@ -66,7 +66,7 @@ const bioDerivatives* bioExprMontecarlo::getValueAndDerivatives(std::vector<bioU
   }
   if (hessian) {
     for (bioUInt i = 0 ; i < n ; ++i) {
-      for (bioUInt j = i ; j < n ; ++j) {
+      for (bioUInt j = i+1 ; j < n ; ++j) {
 	    theDerivatives.h[j][i] = theDerivatives.h[i][j] ;
       }
     }

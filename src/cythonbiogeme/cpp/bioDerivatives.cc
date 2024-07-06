@@ -56,7 +56,7 @@ void bioDerivatives::resize(bioUInt n) {
 	// Bug with STL.
 	
 	// When n is large, the following statement kills the process (with
-	// a message "bad_alloc") without trigerring an exception.
+	// a message "bad_alloc") without triggering an exception.
 	// The only way to deal with it would be to abandon the use of STL vectors.
 	// This would require a significant re-engineering of the code.
 	// This may be considered in the future.
@@ -226,20 +226,23 @@ bioDerivatives& bioDerivatives::operator+=(const bioDerivatives& rhs) {
       }
     }
   }
+  dealWithNumericalIssues() ;
+
   return *this ;
 }
 
 void bioDerivatives::dealWithNumericalIssues() {
-  static const bioReal sqrt_max_float = constants::get_sqrt_max_float();
+  static const bioReal upper_bound = constants::get_upper_bound();
+
 
   bioUInt n = getSize() ;
   if (!std::isfinite(f)) {
     if (std::signbit(f)) {
       // It is a negative number
-      f = -sqrt_max_float ;
+      f = -upper_bound ;
     }
     else {
-      f = sqrt_max_float ;
+      f = upper_bound ;
     }
   }
   else {
@@ -251,10 +254,10 @@ void bioDerivatives::dealWithNumericalIssues() {
       if (!std::isfinite(g[i])) {
         if (std::signbit(g[i])) {
           // It is a negative number
-	      g[i] = -sqrt_max_float ;
+	      g[i] = -upper_bound ;
         }
         else {
-          g[i] = sqrt_max_float ;
+          g[i] = upper_bound ;
         }
       }
       else {
@@ -264,10 +267,10 @@ void bioDerivatives::dealWithNumericalIssues() {
 	    for (bioUInt j = i ; j < n ; ++j) {
 	      if (!std::isfinite(h[i][j])) {
 	        if (std::signbit(h[i][j])) {
-	          h[i][j] = -sqrt_max_float ;
+	          h[i][j] = -upper_bound ;
 	        }
 	        else {
-	          h[i][j] = sqrt_max_float ;
+	          h[i][j] = upper_bound ;
 	        }
 	      }
 	      else {
@@ -284,10 +287,10 @@ void bioDerivatives::dealWithNumericalIssues() {
 	    for (bioUInt j = i ; j < n ; ++j) {
 	      if (!std::isfinite(bhhh[i][j])) {
 	        if (std::signbit(bhhh[i][j])) {
-	          bhhh[i][j] = -sqrt_max_float ;
+	          bhhh[i][j] = -upper_bound ;
 	        }
 	        else {
-	          bhhh[i][j] = sqrt_max_float ;
+	          bhhh[i][j] = upper_bound ;
 	        }
 	      }
 	      else {

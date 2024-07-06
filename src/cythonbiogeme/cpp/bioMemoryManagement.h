@@ -28,6 +28,7 @@ class bioExprMinus ;
 class bioExprTimes ;
 class bioExprDivide ;
 class bioExprPower ;
+class bioExprPowerConstant ;
 class bioExprAnd ;
 class bioExprOr ;
 class bioExprEqual ;
@@ -85,6 +86,7 @@ public:
   bioExprTimes* get_bioExprTimes(bioExpression* ell, bioExpression* r) ;
   bioExprDivide* get_bioExprDivide(bioExpression* ell, bioExpression* r) ;
   bioExprPower* get_bioExprPower(bioExpression* ell, bioExpression* r) ;
+  bioExprPowerConstant* get_bioExprPowerConstant(bioExpression* ell, bioReal exponent) ;
   bioExprAnd* get_bioExprAnd(bioExpression* ell, bioExpression* r) ;
   bioExprOr* get_bioExprOr(bioExpression* ell, bioExpression* r) ;
   bioExprEqual* get_bioExprEqual(bioExpression* ell, bioExpression* r) ;
@@ -130,6 +132,7 @@ private:
   std::vector<bioExprTimes*> a_bioExprTimes ;
   std::vector<bioExprDivide*> a_bioExprDivide ;
   std::vector<bioExprPower*> a_bioExprPower ;
+  std::vector<bioExprPowerConstant*> a_bioExprPowerConstant ;
   std::vector<bioExprAnd*> a_bioExprAnd ;
   std::vector<bioExprOr*> a_bioExprOr ;
   std::vector<bioExprEqual*> a_bioExprEqual ;

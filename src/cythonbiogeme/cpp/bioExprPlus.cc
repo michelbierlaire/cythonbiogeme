@@ -47,6 +47,7 @@ const bioDerivatives* bioExprPlus::getValueAndDerivatives(std::vector<bioUInt> l
   else {
     theDerivatives.f = leftResult->f + rightResult->f ;
   }
+
   if (gradient) {
     for (bioUInt i = 0 ; i < n ; ++i) {
       if (leftResult->g[i] == 0.0) {
@@ -73,7 +74,9 @@ const bioDerivatives* bioExprPlus::getValueAndDerivatives(std::vector<bioUInt> l
       }
     }
   }
+
   theDerivatives.dealWithNumericalIssues() ;
+
   return &theDerivatives ;
 }
 

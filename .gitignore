@@ -44,3 +44,9 @@ src/cythonbiogeme.egg-info/
 .DS_Store
 src/cythonbiogeme/cpp/bioExprLog.cc.keep
 src/cythonbiogeme/cpp/bioExprLog.h.keep
+cysetuptools.py.keep
+setup.py.keep
+setup.py.new
+src/cythonbiogeme/cpp/bioExprLogLogit.cc.keep
+src/cythonbiogeme/cpp/bioExprLogLogitFullChoiceSet.cc.keep
+src/cythonbiogeme/cpp/bioExprLogLogitFullChoiceSet.h.keep

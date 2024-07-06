@@ -36,6 +36,7 @@
 #include "bioExprTimes.h"
 #include "bioExprDivide.h"
 #include "bioExprPower.h"
+#include "bioExprPowerConstant.h"
 #include "bioExprUnaryMinus.h"
 #include "bioExprExp.h"
 #include "bioExprSin.h"
@@ -432,6 +433,14 @@ bioExpression* bioFormula::processFormula(bioString f) {
     std::vector<bioString> items = split(f,',') ;
     std::map<bioString,bioExpression*>::iterator e = expressions.find(items[1]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprCos(e->second) ;
+    expressions[id] = theExpression ;
+    return theExpression ;
+  }
+  else if (typeOfExpression == "PowerConstant") {
+    std::vector<bioString> items = split(f,',') ;
+    std::map<bioString,bioExpression*>::iterator e = expressions.find(items[1]) ;
+    bioReal exponent = std::stod(items[2]) ;
+    theExpression = bioMemoryManagement::the()->get_bioExprPowerConstant(e->second, exponent) ;
     expressions[id] = theExpression ;
     return theExpression ;
   }
