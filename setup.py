@@ -1,9 +1,9 @@
-import setuptools
-import os
+from setuptools import setup, Extension
+from Cython.Build import cythonize
+import numpy
 import platform
 
 def get_ext_modules():
-    from Cython.Build import cythonize
     ext_modules = [
         setuptools.Extension(
             "cythonbiogeme.cythonbiogeme",
@@ -70,7 +70,7 @@ def get_ext_modules():
                 "src/cythonbiogeme/cpp/evaluateExpressions.cc",
                 "src/cythonbiogeme/cpp/validity_check.cc",
             ],
-            include_dirs=["src", get_numpy_include()],
+            include_dirs=["src", numpy.get_include()],
             language="c++",
             extra_compile_args=["-std=c++11"],
             extra_link_args=["-std=c++11"]
