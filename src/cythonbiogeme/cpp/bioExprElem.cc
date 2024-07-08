@@ -78,9 +78,9 @@ const bioDerivatives* bioExprElem::getValueAndDerivatives(std::vector<bioUInt> l
     for (std::size_t kk = 0 ; kk < literalIds.size() ; ++kk) {
       theDerivatives.g[kk] = fgh->g[kk] ;
       if (hessian) {
-   	for (std::size_t ell = 0 ; ell < literalIds.size() ; ++ell) {
-   	  theDerivatives.h[kk][ell] = fgh->h[kk][ell] ;
-   	}
+   	    for (std::size_t ell = 0 ; ell < literalIds.size() ; ++ell) {
+   	      theDerivatives.h[kk][ell] = fgh->h[kk][ell] ;
+   	    }
       }
     }
   }
