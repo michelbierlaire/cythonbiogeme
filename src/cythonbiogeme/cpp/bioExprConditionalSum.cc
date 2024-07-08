@@ -44,14 +44,14 @@ const bioDerivatives* bioExprConditionalSum::getValueAndDerivatives(std::vector<
       
       theDerivatives.f += fgh->f ;
       if (gradient) {
-	for (std::size_t k = 0 ; k < size ; ++k) {
-	  theDerivatives.g[k] += fgh->g[k] ;
-	  if (hessian) {
-	    for (std::size_t l = k ; l < size ; ++l) {
-	      theDerivatives.h[k][l] += fgh->h[k][l] ;
+	    for (std::size_t k = 0 ; k < size ; ++k) {
+	      theDerivatives.g[k] += fgh->g[k] ;
+	      if (hessian) {
+	        for (std::size_t l = k ; l < size ; ++l) {
+	          theDerivatives.h[k][l] += fgh->h[k][l] ;
+	        }
+	      }
 	    }
-	  }
-	}
       }
     }
   }
@@ -59,10 +59,11 @@ const bioDerivatives* bioExprConditionalSum::getValueAndDerivatives(std::vector<
     // Fill the symmetric part of the matrix
     for (std::size_t k = 0 ; k < size ; ++k) {
       for (std::size_t l = k+1 ; l < size ; ++l) {
-	theDerivatives.h[l][k]  = theDerivatives.h[k][l] ;
+	    theDerivatives.h[l][k]  = theDerivatives.h[k][l] ;
       }
     }
   }
+  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 
