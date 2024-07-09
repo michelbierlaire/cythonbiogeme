@@ -3,7 +3,7 @@ tests/__pycache__
 build
 .idea/*
 .DS_Store
-
+src/cythonbiogeme.egg-info/*
 # Prerequisites
 *.d
 
@@ -38,3 +38,12 @@ build
 *.app
 src/cythonbiogeme/cpp/cythonbiogeme.cpp
 .DS_Store
+cysetuptools.py.keep
+cythonbiogeme-1.0.3a0-cp312-cp312-macosx_10_9_universal2.whl
+setup.py.keep
+setup.py.new
+src/cythonbiogeme/cpp/bioExprLog.cc.keep
+src/cythonbiogeme/cpp/bioExprLog.h.keep
+src/cythonbiogeme/cpp/bioExprLogLogit.cc.keep
+src/cythonbiogeme/cpp/bioExprLogLogitFullChoiceSet.cc.keep
+src/cythonbiogeme/cpp/bioExprLogLogitFullChoiceSet.h.keep
