@@ -1,6 +1,8 @@
 src/cythonbiogeme/__pycache__
 tests/__pycache__
 build
+.idea/*
+.DS_Store
 
 # Prerequisites
 *.d
@@ -35,3 +37,4 @@ build
 *.out
 *.app
 src/cythonbiogeme/cpp/cythonbiogeme.cpp
+.DS_Store
