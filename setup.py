@@ -3,6 +3,7 @@ from Cython.Build import cythonize
 import numpy
 import platform
 
+
 def get_ext_modules():
     ext_modules = [
         setuptools.Extension(
@@ -73,23 +74,33 @@ def get_ext_modules():
             include_dirs=["src", numpy.get_include()],
             language="c++",
             extra_compile_args=["-std=c++11"],
-            extra_link_args=["-std=c++11"]
+            extra_link_args=["-std=c++11"],
         )
     ]
     if platform.system() == "Windows":
         ext_modules[0].extra_compile_args.append("-DMS_WIN64")
-        ext_modules[0].extra_link_args.extend([
-            "-static", "-static-libstdc++", "-static-libgcc", "-lpthread", "-mms-bitfields", "-mwindows"
-        ])
+        ext_modules[0].extra_link_args.extend(
+            [
+                "-static",
+                "-static-libstdc++",
+                "-static-libgcc",
+                "-lpthread",
+                "-mms-bitfields",
+                "-mwindows",
+            ]
+        )
     return cythonize(ext_modules)
+
 
 def get_numpy_include():
     import numpy
+
     return numpy.get_include()
+
 
 setuptools.setup(
     packages=setuptools.find_packages(where="src"),
     package_dir={"": "src"},
     ext_modules=get_ext_modules(),
-    include_package_data=True
+    include_package_data=True,
 )
