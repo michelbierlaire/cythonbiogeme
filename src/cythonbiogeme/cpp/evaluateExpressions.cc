@@ -239,8 +239,13 @@ void evaluateOneExpression::setNumberOfThreads(bioUInt n) {
   nbrOfThreads = n ;
 }
 
+
 void evaluateOneExpression::applyTheFormula() {
+  #ifdef _WIN32
+  std::vector<std::thread> theThreads(nbrOfThreads);
+  #else
   std::vector<pthread_t> theThreads(nbrOfThreads) ;
+  #endif
   for (bioUInt thread = 0 ; thread < nbrOfThreads ; ++thread) {
     if (theInput[thread] == NULL) {
       throw bioExceptNullPointer(__FILE__,__LINE__,"thread") ;
@@ -250,6 +255,7 @@ void evaluateOneExpression::applyTheFormula() {
     theInput[thread]->calcHessian = with_h ;
     theInput[thread]->calcBhhh = with_bhhh ;
 
+    
     bioUInt diagnostic = pthread_create(&(theThreads[thread]),
 					NULL,
 					computeFunctionForThreadExpression,
@@ -278,7 +284,6 @@ void evaluateOneExpression::applyTheFormula() {
   results.dealWithNumericalIssues() ;
   return ;
 }
-
 
 
 void *computeFunctionForThreadExpression(void* fctPtr) {
