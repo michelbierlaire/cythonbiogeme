@@ -13,7 +13,7 @@
 #include <sstream>
 #include <cmath>
 #include <algorithm>
-#include <pthread.h>
+//#include <pthread.h>
 #include "bioMemoryManagement.h"
 #include "bioExceptions.h"
 #include "bioDebug.h"
