@@ -607,7 +607,11 @@ void biogeme::simulateSeveralFormulas(std::vector<std::vector<bioString> > formu
   theThreadMemorySimul.setParameters(&betas) ;
   theThreadMemorySimul.setFixedParameters(&fixedBetas) ;
   
-  std::vector<pthread_t> theThreads(nbrOfThreads) ;
+  #ifdef _WIN32
+    std::vector<std::thread> theThreads(nbrOfThreads);
+  #else
+    std::vector<pthread_t> theThreads(nbrOfThreads) ;
+  #endif
   for (bioUInt thread = 0 ; thread < nbrOfThreads ; ++thread) {
     bioSeveralExpressions* theFormulas = theSimulInput[thread]->theFormulas.getExpressions() ;
     theFormulas->setData(theSimulInput[thread]->data) ;
