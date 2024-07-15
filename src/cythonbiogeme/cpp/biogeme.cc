@@ -103,6 +103,15 @@ bioReal biogeme::applyTheFormula(  std::vector<bioReal>* g,
     theInput[thread]->calcHessian = (h != NULL) ;
     theInput[thread]->calcBhhh = (bh != NULL) ;
 
+    #ifdef _WIN32
+    try {
+      theThreads[thread] = std::thread(computeFunctionForThread, theInput[thread]);
+    } catch (const std::system_error& e) {
+      std::stringstream str;
+      str << "Error in creating thread " << thread << "/" << nbrOfThreads << ": " << e.what();
+      throw bioExceptions(__FILE__, __LINE__, str.str());
+    }
+    #else
     bioUInt diagnostic = pthread_create(&(theThreads[thread]),
 					NULL,
 					computeFunctionForThread,
@@ -113,6 +122,7 @@ bioReal biogeme::applyTheFormula(  std::vector<bioReal>* g,
       str << "Error " << diagnostic << " in creating thread " << thread << "/" << nbrOfThreads ;
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
+    #endif
   }
   bioReal result(0.0) ;
   if (g != NULL) {
@@ -125,7 +135,11 @@ bioReal biogeme::applyTheFormula(  std::vector<bioReal>* g,
     }
   }
   for (bioUInt thread = 0 ; thread < nbrOfThreads ; ++thread) {
-    pthread_join( theThreads[thread], NULL);
+    #ifdef _WIN32
+       theThreads[thread].join();
+    #else
+      pthread_join( theThreads[thread], NULL);
+    #endif
     if (theExceptionPtr != nullptr) {
       std::rethrow_exception(theExceptionPtr);
     }
