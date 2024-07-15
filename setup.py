@@ -1,3 +1,5 @@
+import os
+
 import setuptools
 from Cython.Build import cythonize
 import numpy
@@ -78,6 +80,7 @@ def get_ext_modules():
         )
     ]
     if platform.system() == "Windows":
+        os.environ['CC'] = 'mingw'
         ext_modules[0].extra_compile_args.append("-DMS_WIN64")
         ext_modules[0].extra_link_args.extend(
             [
@@ -89,6 +92,7 @@ def get_ext_modules():
                 "-mwindows",
             ]
         )
+
     return cythonize(ext_modules)
 
 
