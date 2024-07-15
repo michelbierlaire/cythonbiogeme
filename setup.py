@@ -79,9 +79,10 @@ def get_ext_modules():
             extra_link_args=["-std=c++11"],
         )
     ]
-    print(f'**** {platform.system()} ****')
+
     if platform.system() == "Windows":
-        os.environ['CC'] = 'mingw'
+        print(f'**** [{platform.system()}] ****')
+        os.environ['CC'] = 'mingw32'
         ext_modules[0].extra_compile_args.append("-DMS_WIN64")
         ext_modules[0].extra_link_args.extend(
             [
