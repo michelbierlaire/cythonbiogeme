@@ -255,7 +255,7 @@ void evaluateOneExpression::applyTheFormula() {
     theInput[thread]->calcHessian = with_h ;
     theInput[thread]->calcBhhh = with_bhhh ;
 
-    
+
     bioUInt diagnostic = pthread_create(&(theThreads[thread]),
 					NULL,
 					computeFunctionForThreadExpression,
