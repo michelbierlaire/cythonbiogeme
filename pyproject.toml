@@ -44,5 +44,6 @@ testing = [
     "tox >= 4.15.1"
 ]
 
+
 [tool.setuptools.dynamic]
 version = { attr = "cythonbiogeme.version.__version__" }
