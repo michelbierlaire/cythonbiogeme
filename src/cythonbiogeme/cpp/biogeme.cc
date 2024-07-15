@@ -93,8 +93,12 @@ bioReal biogeme::applyTheFormula(  std::vector<bioReal>* g,
     }
   }
 
-   //  std::vector<bioThreadArg*> theInput(nbrOfThreads) ;
-  std::vector<pthread_t> theThreads(nbrOfThreads) ;
+  //  std::vector<bioThreadArg*> theInput(nbrOfThreads) ;
+  #ifdef _WIN32
+    std::vector<std::thread> theThreads(nbrOfThreads);
+  #else
+    std::vector<pthread_t> theThreads(nbrOfThreads) ;
+  #endif
   for (bioUInt thread = 0 ; thread < nbrOfThreads ; ++thread) {
     if (theInput[thread] == NULL) {
       throw bioExceptNullPointer(__FILE__,__LINE__,"thread") ;
