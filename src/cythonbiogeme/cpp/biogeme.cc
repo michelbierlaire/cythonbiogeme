@@ -13,7 +13,11 @@
 #include <sstream>
 #include <cmath>
 #include <algorithm>
-//#include <pthread.h>
+#ifdef _WIN32
+#include <thread>
+#else
+#include <pthread.h>
+#endif
 #include "bioMemoryManagement.h"
 #include "bioExceptions.h"
 #include "bioDebug.h"
