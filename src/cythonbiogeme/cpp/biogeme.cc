@@ -622,16 +622,26 @@ void biogeme::simulateSeveralFormulas(std::vector<std::vector<bioString> > formu
     if (theSimulInput[thread] == NULL) {
       throw bioExceptNullPointer(__FILE__,__LINE__,"thread") ;
     }
-    bioUInt diagnostic = pthread_create(&(theThreads[thread]),
-					NULL,
+    #ifdef _WIN32
+    try {
+      theThreads[thread] = std::thread(computeFunctionForThread, theInput[thread]);
+    } catch (const std::system_error& e) {
+      std::stringstream str;
+      str << "Error in creating thread " << thread << "/" << nbrOfThreads << ": " << e.what();
+      throw bioExceptions(__FILE__, __LINE__, str.str());
+    }
+    #else
+      bioUInt diagnostic = pthread_create(&(theThreads[thread]),
+				  	NULL,
 					simulFunctionForThread,
 					(void*) theSimulInput[thread]) ;
     
-    if (diagnostic != 0) {
-      std::stringstream str ;
-      str << "Error " << diagnostic << " in creating thread " << thread << "/" << nbrOfThreads ;
-      throw bioExceptions(__FILE__,__LINE__,str.str()) ;
-    }
+      if (diagnostic != 0) {
+        std::stringstream str ;
+        str << "Error " << diagnostic << " in creating thread " << thread << "/" << nbrOfThreads ;
+        throw bioExceptions(__FILE__,__LINE__,str.str()) ;
+      }
+      #endif
   }
 
   bioUInt N ;
@@ -643,7 +653,11 @@ void biogeme::simulateSeveralFormulas(std::vector<std::vector<bioString> > formu
   }
 
   for (bioUInt thread = 0 ; thread < nbrOfThreads ; ++thread) {
-    pthread_join( theThreads[thread], NULL);
+    #ifdef _WIN32
+       theThreads[thread].join();
+    #else
+      pthread_join( theThreads[thread], NULL);
+    #endif
     if (theExceptionPtr != nullptr) {
       std::rethrow_exception(theExceptionPtr);
     }
