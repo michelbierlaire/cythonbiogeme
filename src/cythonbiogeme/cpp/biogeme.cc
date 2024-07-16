@@ -423,7 +423,8 @@ void *computeFunctionForThread(void* fctPtr) {
 	        w = input->theWeight.getExpression()->getValue() ;
 	      }
           DEBUG_MESSAGE("A12 about to calculate derivatives: Thread " << input->threadId) ;
-          DEBUG_MESSAGE("Expression: " << myLoglike->print())
+          DEBUG_MESSAGE("Pointer: " << myLoglike) ;
+          DEBUG_MESSAGE("Expression: " << myLoglike->print()) ;
 
 	      const bioDerivatives* fgh = myLoglike->getValueAndDerivatives(*input->literalIds,
 						  input->calcGradient,
