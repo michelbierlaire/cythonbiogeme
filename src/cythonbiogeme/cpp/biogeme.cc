@@ -341,11 +341,12 @@ void *computeFunctionForThread(void* fctPtr) {
 	if (input->theWeight.isDefined()) {
 	  w = input->theWeight.getExpression()->getValue() ;
 	}
-      
+    DEBUG_MESSAGE("About to calculate derivatives, thread " << input->threadId) ;
 	const bioDerivatives* fgh = myLoglike->getValueAndDerivatives(*input->literalIds,
 								      input->calcGradient,
 								      input->calcHessian) ;
-      
+    DEBUG_MESSAGE("After calculate derivatives, thread " << input->threadId) ;
+
 	if (!input->theWeight.isDefined()) {
 	  input->result += fgh->f ;
 	  for (bioUInt i = 0 ; i < input->grad.size() ; ++i) {
@@ -453,6 +454,8 @@ void *computeFunctionForThread(void* fctPtr) {
 	}
       }
     }
+    DEBUG_MESSAGE("End of loop on rows, thread " << input->threadId) ;
+
     //DEBUG_MESSAGE("End of loop on rows") ;
     input->theLoglike.setRowIndex(NULL) ;
     input->theLoglike.setIndividualIndex(NULL) ;
