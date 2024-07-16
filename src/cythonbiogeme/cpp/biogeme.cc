@@ -320,17 +320,31 @@ void *computeFunctionForThread(void* fctPtr) {
     DEBUG_MESSAGE("Thread " << input->threadId) ;
 
     bioReal w(1.0) ;
+    DEBUG_MESSAGE("A1: Thread " << input->threadId) ;
+
     input->result = 0.0 ;
+    DEBUG_MESSAGE("A2: Thread " << input->threadId) ;
+
     if (input->calcGradient) {
+      DEBUG_MESSAGE("A3: Thread " << input->threadId) ;
       std::fill(input->grad.begin(),input->grad.end(),0.0) ;
+      DEBUG_MESSAGE("A4: Thread " << input->threadId) ;
       if (input->calcHessian) {
-	std::fill(input->hessian.begin(),input->hessian.end(),input->grad) ;
+        DEBUG_MESSAGE("A5: Thread " << input->threadId) ;
+	    std::fill(input->hessian.begin(),input->hessian.end(),input->grad) ;
+	    DEBUG_MESSAGE("A6: Thread " << input->threadId) ;
       }
       if (input->calcBhhh) {
-	std::fill(input->bhhh.begin(),input->bhhh.end(),input->grad) ;
+        DEBUG_MESSAGE("A7: Thread " << input->threadId) ;
+	    std::fill(input->bhhh.begin(),input->bhhh.end(),input->grad) ;
+	    DEBUG_MESSAGE("A8: Thread " << input->threadId) ;
+
       }
     }
+    DEBUG_MESSAGE("A9: Thread " << input->threadId) ;
     bioExpression* myLoglike = input->theLoglike.getExpression() ;
+    DEBUG_MESSAGE("A10: Thread " << input->threadId) ;
+
     if (input->panel) {
       // Panel data
       bioUInt individual ;
