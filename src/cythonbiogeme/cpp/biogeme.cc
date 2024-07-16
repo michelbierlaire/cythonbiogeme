@@ -357,7 +357,7 @@ void *computeFunctionForThread(void* fctPtr) {
 	      w = input->theWeight.getExpression()->getValue() ;
 	    }
         DEBUG_MESSAGE("About to calculate panel derivatives, thread " << input->threadId) ;
-	    const bioDerivatives* fgh = myLoglike->getValueAndDerivatives(*input->literalIds,
+        const bioDerivatives* fgh = myLoglike->getValueAndDerivatives(*input->literalIds,
 								      input->calcGradient,
 								      input->calcHessian) ;
         DEBUG_MESSAGE("After calculate derivatives, thread " << input->threadId) ;
@@ -423,6 +423,8 @@ void *computeFunctionForThread(void* fctPtr) {
 	        w = input->theWeight.getExpression()->getValue() ;
 	      }
           DEBUG_MESSAGE("A12 about to calculate derivatives: Thread " << input->threadId) ;
+          DEBUG_MESSAGE("Expression: " << myLoglike->print())
+
 	      const bioDerivatives* fgh = myLoglike->getValueAndDerivatives(*input->literalIds,
 						  input->calcGradient,
 						  input->calcHessian) ;
@@ -434,7 +436,7 @@ void *computeFunctionForThread(void* fctPtr) {
 	        input->result += fgh->f ;
 
 	        for (bioUInt i = 0 ; i < input->grad.size() ; ++i) {
-            
+
 	          (input->grad)[i] += fgh->g[i] ;
 	          if (input->calcHessian) {
 		        for (bioUInt j = 0 ; j < input->grad.size() ; ++j) {
