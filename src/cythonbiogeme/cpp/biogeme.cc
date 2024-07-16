@@ -346,57 +346,58 @@ void *computeFunctionForThread(void* fctPtr) {
     DEBUG_MESSAGE("A10: Thread " << input->threadId) ;
 
     if (input->panel) {
+      DEBUG_MESSAGE("A11 Panel: Thread " << input->threadId) ;
       // Panel data
       bioUInt individual ;
       myLoglike->setIndividualIndex(&individual) ;
       for (individual = input->startData ;
-	   individual < input->endData ;
-	   ++individual) {
-	if (input->theWeight.isDefined()) {
-	  w = input->theWeight.getExpression()->getValue() ;
-	}
-    DEBUG_MESSAGE("About to calculate derivatives, thread " << input->threadId) ;
-	const bioDerivatives* fgh = myLoglike->getValueAndDerivatives(*input->literalIds,
+	    individual < input->endData ;
+	    ++individual) {
+	    if (input->theWeight.isDefined()) {
+	      w = input->theWeight.getExpression()->getValue() ;
+	    }
+        DEBUG_MESSAGE("About to calculate panel derivatives, thread " << input->threadId) ;
+	    const bioDerivatives* fgh = myLoglike->getValueAndDerivatives(*input->literalIds,
 								      input->calcGradient,
 								      input->calcHessian) ;
-    DEBUG_MESSAGE("After calculate derivatives, thread " << input->threadId) ;
+        DEBUG_MESSAGE("After calculate derivatives, thread " << input->threadId) ;
 
-	if (!input->theWeight.isDefined()) {
-	  input->result += fgh->f ;
-	  for (bioUInt i = 0 ; i < input->grad.size() ; ++i) {
-	    (input->grad)[i] += fgh->g[i] ;
-	    if (input->calcHessian) {
-	      for (bioUInt j = 0 ; j < input->grad.size() ; ++j) {
-		(input->hessian)[i][j] += fgh->h[i][j] ;
+	    if (!input->theWeight.isDefined()) {
+	      input->result += fgh->f ;
+	      for (bioUInt i = 0 ; i < input->grad.size() ; ++i) {
+	        (input->grad)[i] += fgh->g[i] ;
+	        if (input->calcHessian) {
+	          for (bioUInt j = 0 ; j < input->grad.size() ; ++j) {
+		        (input->hessian)[i][j] += fgh->h[i][j] ;
+	          }
+	        }
+	        if (input->calcBhhh) {
+	          for (bioUInt j = i ; j < input->grad.size() ; ++j) {
+		        (input->bhhh)[i][j] += fgh->g[i] * fgh->g[j] ;
+	          }
+	        }
 	      }
 	    }
-	    if (input->calcBhhh) {
-	      for (bioUInt j = i ; j < input->grad.size() ; ++j) {
-		(input->bhhh)[i][j] += fgh->g[i] * fgh->g[j] ;
+	    else {
+	      input->result += w * fgh->f ;
+	      for (bioUInt i = 0 ; i < input->grad.size() ; ++i) {
+	        (input->grad)[i] += w * fgh->g[i] ;
+	        if (input->calcHessian) {
+	          for (bioUInt j = 0 ; j < input->grad.size() ; ++j) {
+		        (input->hessian)[i][j] += w * fgh->h[i][j] ;
+	          }
+	        }
+	        if (input->calcBhhh) {
+	          for (bioUInt j = i ; j < input->grad.size() ; ++j) {
+		        (input->bhhh)[i][j] += w * fgh->g[i] * fgh->g[j] ;
+	          }
+	        }
 	      }
 	    }
-	  }
-	}
-	else {
-	  input->result += w * fgh->f ;
-	  for (bioUInt i = 0 ; i < input->grad.size() ; ++i) {
-	    (input->grad)[i] += w * fgh->g[i] ;
-	    if (input->calcHessian) {
-	      for (bioUInt j = 0 ; j < input->grad.size() ; ++j) {
-		    (input->hessian)[i][j] += w * fgh->h[i][j] ;
-	      }
-	    }
-	    if (input->calcBhhh) {
-	      for (bioUInt j = i ; j < input->grad.size() ; ++j) {
-		(input->bhhh)[i][j] += w * fgh->g[i] * fgh->g[j] ;
-	      }
-	    }
-	  }
-	}
       }
-      
     }
     else {
+      DEBUG_MESSAGE("A11 not panel: Thread " << input->threadId) ;
       // No panel data
       bioUInt row ;
       if (myLoglike == NULL) {
@@ -405,67 +406,71 @@ void *computeFunctionForThread(void* fctPtr) {
       myLoglike->setIndividualIndex(&row) ;
       myLoglike->setRowIndex(&row) ;
       if (input->theWeight.isDefined()) {
-	input->theWeight.setIndividualIndex(&row) ;
-	input->theWeight.setRowIndex(&row) ;
+	    input->theWeight.setIndividualIndex(&row) ;
+	    input->theWeight.setRowIndex(&row) ;
       }
 
       for (row = input->startData ;
-	   row < input->endData ;
-	   ++row) {
+	    row < input->endData ;
+	    ++row) {
 
 
-	// if (row % 100 == 0) {
-	//   DEBUG_MESSAGE("Row " << row) ;
-	// }
-	try {
-	  if (input->theWeight.isDefined()) {
-	    w = input->theWeight.getExpression()->getValue() ;
-	  }
-
-	  const bioDerivatives* fgh = myLoglike->getValueAndDerivatives(*input->literalIds,
+	    // if (row % 100 == 0) {
+	    //   DEBUG_MESSAGE("Row " << row) ;
+	    // }
+	    try {
+	      if (input->theWeight.isDefined()) {
+	        w = input->theWeight.getExpression()->getValue() ;
+	      }
+          DEBUG_MESSAGE("A12 about to calculate derivatives: Thread " << input->threadId) ;
+	      const bioDerivatives* fgh = myLoglike->getValueAndDerivatives(*input->literalIds,
 						  input->calcGradient,
 						  input->calcHessian) ;
+		  DEBUG_MESSAGE("A13 done with calculate derivatives: Thread " << input->threadId) ;
 
-	  if (!input->theWeight.isDefined()) {
-	    input->result += fgh->f ;
+	      if (!input->theWeight.isDefined()) {
+	        DEBUG_MESSAGE("A14 no weight: Thread " << input->threadId) ;
 
-	    for (bioUInt i = 0 ; i < input->grad.size() ; ++i) {
-                
-	      (input->grad)[i] += fgh->g[i] ;
-	      if (input->calcHessian) {
-		for (bioUInt j = 0 ; j < input->grad.size() ; ++j) {
-		  (input->hessian)[i][j] += fgh->h[i][j] ;
-		}
+	        input->result += fgh->f ;
+
+	        for (bioUInt i = 0 ; i < input->grad.size() ; ++i) {
+            
+	          (input->grad)[i] += fgh->g[i] ;
+	          if (input->calcHessian) {
+		        for (bioUInt j = 0 ; j < input->grad.size() ; ++j) {
+		          (input->hessian)[i][j] += fgh->h[i][j] ;
+		        }
+	          }
+	          if (input->calcBhhh) {
+		        for (bioUInt j = i ; j < input->grad.size() ; ++j) {
+		          (input->bhhh)[i][j] += fgh->g[i] * fgh->g[j] ;
+		        }
+	          }
+	        }
 	      }
-	      if (input->calcBhhh) {
-		for (bioUInt j = i ; j < input->grad.size() ; ++j) {
-		  (input->bhhh)[i][j] += fgh->g[i] * fgh->g[j] ;
-		}
+	      else {
+	        DEBUG_MESSAGE("A14 weight: Thread " << input->threadId) ;
+	        input->result += w * fgh->f ;
+	        for (bioUInt i = 0 ; i < input->grad.size() ; ++i) {
+	          (input->grad)[i] += w * fgh->g[i] ;
+	          if (input->calcHessian) {
+		        for (bioUInt j = 0 ; j < input->grad.size() ; ++j) {
+		          (input->hessian)[i][j] += w * fgh->h[i][j] ;
+		        }
+	          }
+	          if (input->calcBhhh) {
+		        for (bioUInt j = i ; j < input->grad.size() ; ++j) {
+		          (input->bhhh)[i][j] += w * fgh->g[i] * fgh->g[j] ;
+		        }
+	          }
+	        }
 	      }
 	    }
-	  }
-	  else {
-	    input->result += w * fgh->f ;
-	    for (bioUInt i = 0 ; i < input->grad.size() ; ++i) {
-	      (input->grad)[i] += w * fgh->g[i] ;
-	      if (input->calcHessian) {
-		for (bioUInt j = 0 ; j < input->grad.size() ; ++j) {
-		  (input->hessian)[i][j] += w * fgh->h[i][j] ;
-		}
-	      }
-	      if (input->calcBhhh) {
-		for (bioUInt j = i ; j < input->grad.size() ; ++j) {
-		  (input->bhhh)[i][j] += w * fgh->g[i] * fgh->g[j] ;
-		}
-	      }
+	    catch(bioExceptions& e) {
+	      std::stringstream str ;
+	      str << "Error for data entry " << row << " : " << e.what() ;
+	      throw bioExceptions(__FILE__,__LINE__,str.str()) ;
 	    }
-	  }
-	}
-	catch(bioExceptions& e) {
-	  std::stringstream str ;
-	  str << "Error for data entry " << row << " : " << e.what() ;
-	  throw bioExceptions(__FILE__,__LINE__,str.str()) ;
-	}
       }
     }
     DEBUG_MESSAGE("End of loop on rows, thread " << input->threadId) ;
