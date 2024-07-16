@@ -315,6 +315,11 @@ void biogeme::setExpressions(std::vector<bioString> ll,
 
 void *computeFunctionForThread(void* fctPtr) {
   bioThreadArg *input = (bioThreadArg *) fctPtr;
+  DEBUG_MESSAGE("Is defined? " << input->theLoglike.isDefined()) ;
+  bioExpression* debug_pointer = input->theLoglike.getExpression() ;
+  DEBUG_MESSAGE("Pointer: " << debug_pointer) ;
+  DEBUG_MESSAGE("Formula: " << input->theLogLike)
+  DEBUG_MESSAGE("Expression: " << debug_pointer->print()) ;
 
   try {
     DEBUG_MESSAGE("Call computeFunctionForThread") ;
