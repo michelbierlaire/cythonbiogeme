@@ -286,7 +286,7 @@ void evaluateOneExpression::applyTheFormula() {
       }
       else {
         std::stringstream str ;
-        str << "Thread " thread << "/" << nbrOfThreads  << " is not joinable";
+        str << "Thread " << thread << "/" << nbrOfThreads  << " is not joinable";
         throw bioExceptions(__FILE__,__LINE__,str.str()) ;
       }
       pthread_join( theThreads[thread], NULL);
