@@ -289,6 +289,7 @@ void evaluateOneExpression::applyTheFormula() {
         str << "Thread " << thread << "/" << nbrOfThreads  << " is not joinable";
         throw bioExceptions(__FILE__,__LINE__,str.str()) ;
       }
+    #else
       pthread_join( theThreads[thread], NULL);
     #endif
     if (theExceptionPtr != nullptr) {
