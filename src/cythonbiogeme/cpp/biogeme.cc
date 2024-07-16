@@ -142,7 +142,14 @@ bioReal biogeme::applyTheFormula(  std::vector<bioReal>* g,
   }
   for (bioUInt thread = 0 ; thread < nbrOfThreads ; ++thread) {
     #ifdef _WIN32
-       theThreads[thread].join();
+      if (theThreads[thread].joinable()) {
+        theThreads[thread].join();
+      }
+      else {
+        std::stringstream str ;
+        str << "Thread " thread << "/" << nbrOfThreads  << " is not joinable";
+        throw bioExceptions(__FILE__,__LINE__,str.str()) ;
+      }
     #else
       pthread_join( theThreads[thread], NULL);
     #endif
@@ -652,7 +659,14 @@ void biogeme::simulateSeveralFormulas(std::vector<std::vector<bioString> > formu
 
   for (bioUInt thread = 0 ; thread < nbrOfThreads ; ++thread) {
     #ifdef _WIN32
-       theThreads[thread].join();
+       if (theThreads[thread].joinable()) {
+        theThreads[thread].join();
+      }
+      else {
+        std::stringstream str ;
+        str << "Thread " thread << "/" << nbrOfThreads  << " is not joinable";
+        throw bioExceptions(__FILE__,__LINE__,str.str()) ;
+      }
     #else
       pthread_join( theThreads[thread], NULL);
     #endif
