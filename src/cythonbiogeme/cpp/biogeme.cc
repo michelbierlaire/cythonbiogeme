@@ -318,7 +318,7 @@ void *computeFunctionForThread(void* fctPtr) {
   DEBUG_MESSAGE("Is defined? " << input->theLoglike.isDefined()) ;
   bioExpression* debug_pointer = input->theLoglike.getExpression() ;
   DEBUG_MESSAGE("Pointer: " << debug_pointer) ;
-  DEBUG_MESSAGE("Formula: " << input->theLogLike)
+  DEBUG_MESSAGE("Formula: " << input->theLoglike)
   DEBUG_MESSAGE("Expression: " << debug_pointer->print()) ;
 
   try {
