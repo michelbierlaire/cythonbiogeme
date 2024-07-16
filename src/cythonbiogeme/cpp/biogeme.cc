@@ -605,6 +605,7 @@ void biogeme::simulateSeveralFormulas(std::vector<std::vector<bioString> > formu
 				      bioUInt t,
 				      std::vector< std::vector<bioReal> > data,
 				      bioReal* results) {
+  DEBUG_MESSAGE("Simulate several formulas with " << nbrOfThreads << " threads") ;
   nbrOfThreads = t ;
   theThreadMemorySimul.resize(nbrOfThreads) ;
   theThreadMemorySimul.setFormulas(formulas) ;
@@ -629,6 +630,7 @@ void biogeme::simulateSeveralFormulas(std::vector<std::vector<bioString> > formu
     }
     #ifdef _WIN32
     try {
+      DEBUG_MESSAGE("Create thread " << thread) ;
       theThreads[thread] = std::thread(computeFunctionForThread, theInput[thread]);
     } catch (const std::system_error& e) {
       std::stringstream str;
@@ -659,6 +661,7 @@ void biogeme::simulateSeveralFormulas(std::vector<std::vector<bioString> > formu
 
   for (bioUInt thread = 0 ; thread < nbrOfThreads ; ++thread) {
     #ifdef _WIN32
+       DEBUG_MESSAGE("Join thread " << thread) ;
        if (theThreads[thread].joinable()) {
         theThreads[thread].join();
       }
@@ -673,6 +676,7 @@ void biogeme::simulateSeveralFormulas(std::vector<std::vector<bioString> > formu
     if (theExceptionPtr != nullptr) {
       std::rethrow_exception(theExceptionPtr);
     }
+    DEBUG_MESSAGE("All threads have finished") ;
     if (theSimulInput[thread]->results.size() !=
 	theSimulInput[thread]->endData - theSimulInput[thread]->startData) {
       std::stringstream str ;
@@ -689,6 +693,7 @@ void biogeme::simulateSeveralFormulas(std::vector<std::vector<bioString> > formu
       }
     }
   }
+  DEBUG_MESSAGE("Results have been collected") ;
   return ;
 }
 
