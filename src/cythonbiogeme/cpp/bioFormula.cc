@@ -74,6 +74,7 @@ void bioFormula::setExpression(std::vector<bioString> expressionsStrings) {
     // matter.
     theFormula = processFormula(*i) ;
   }
+  DEBUG_MESSAGE("*** Set expression: " << *this) ;
 }
 
 void bioFormula::resetExpression() {
@@ -647,11 +648,13 @@ void bioFormula::setDraws(std::vector< std::vector< std::vector<bioReal> > >* d)
 }
 
 void bioFormula::setData(std::vector< std::vector<bioReal> >* d) {
+  DEBUG_MESSAGE("*** Call set data: " << *this) ;
   for (std::map<bioString,bioExpression*>::iterator i = expressions.begin() ;
        i != expressions.end() ;
        ++i) {
     i->second->setData(d) ;
   }
+  DEBUG_MESSAGE("*** Call set data DONE: " << *this) ;
 }
 
 void bioFormula::setMissingData(bioReal md) {
