@@ -619,7 +619,7 @@ bioExpression* bioFormula::processFormula(bioString f) {
 }
 
 bioExpression* bioFormula::getExpression() {
-  DEBUG_MESSAGE("getExpression " << *this) ;
+  //DEBUG_MESSAGE("getExpression " << *this) ;
   return theFormula ;
 }
 
