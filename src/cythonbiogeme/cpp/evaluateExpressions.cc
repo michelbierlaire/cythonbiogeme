@@ -258,7 +258,7 @@ void evaluateOneExpression::applyTheFormula() {
 
     #ifdef _WIN32
     try {
-      theThreads[thread] = std::thread(computeFunctionForThread, theInput[thread]);
+      theThreads[thread] = std::thread(computeFunctionForThreadExpression, theInput[thread]);
     } catch (const std::system_error& e) {
       std::stringstream str;
       str << "Error in creating thread " << thread << "/" << nbrOfThreads << ": " << e.what();
