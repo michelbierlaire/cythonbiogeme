@@ -316,6 +316,9 @@ void biogeme::setExpressions(std::vector<bioString> ll,
 void *computeFunctionForThread(void* fctPtr) {
   try {
     bioThreadArg *input = (bioThreadArg *) fctPtr;
+    DEBUG_MESSAGE("Call computeFunctionForThread") ;
+    DEBUG_MESSAGE("Thread " << input->threadId) ;
+
     bioReal w(1.0) ;
     input->result = 0.0 ;
     if (input->calcGradient) {
