@@ -689,8 +689,21 @@ void bioFormula::setIndividualIndex(bioUInt* i) {
 }
 
 std::ostream& operator<<(std::ostream &str, const bioFormula& x) {
+  for (auto it = expressions.begin(); it != expressions.end(); ++it) {
+        str << "Key: " << it->first << ", Value: ";
+        if (it->second != nullptr) {
+            str << it->second->print();
+        } else {
+            str << "nullptr";
+        }
+        str << std::endl;
+  }
+
   if (x.theFormula != NULL) {
     str << x.theFormula->print() ;
+  }
+  else {
+    str << "Warning: null pointer" ;
   }
   return str ;
 }
