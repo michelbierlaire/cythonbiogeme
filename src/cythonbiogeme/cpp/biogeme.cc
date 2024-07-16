@@ -7,9 +7,7 @@
 //
 //--------------------------------------------------------------------
 
-#ifndef _WIN32
-#error "_WIN32 is not defined. This code should be compiled on a Windows platform."
-#endif
+
 
 #include "biogeme.h"
 #include "bioTypes.h"
