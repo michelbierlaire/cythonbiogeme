@@ -314,8 +314,8 @@ void biogeme::setExpressions(std::vector<bioString> ll,
 }
 
 void *computeFunctionForThread(void* fctPtr) {
+  bioThreadArg *input = (bioThreadArg *) fctPtr;
   try {
-    bioThreadArg *input = (bioThreadArg *) fctPtr;
     DEBUG_MESSAGE("Call computeFunctionForThread") ;
     DEBUG_MESSAGE("Thread " << input->threadId) ;
 
