@@ -689,7 +689,7 @@ void bioFormula::setIndividualIndex(bioUInt* i) {
 }
 
 std::ostream& operator<<(std::ostream &str, const bioFormula& x) {
-  for (auto it = expressions.begin(); it != expressions.end(); ++it) {
+  for (auto it = x.expressions.begin(); it != x.expressions.end(); ++it) {
         str << "Key: " << it->first << ", Value: ";
         if (it->second != nullptr) {
             str << it->second->print();
