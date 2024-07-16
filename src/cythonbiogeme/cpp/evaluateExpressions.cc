@@ -281,8 +281,14 @@ void evaluateOneExpression::applyTheFormula() {
   results.clear() ;
   for (bioUInt thread = 0 ; thread < nbrOfThreads ; ++thread) {
     #ifdef _WIN32
-       theThreads[thread].join();
-    #else
+       if (theThreads[thread].joinable()) {
+        theThreads[thread].join();
+      }
+      else {
+        std::stringstream str ;
+        str << "Thread " thread << "/" << nbrOfThreads  << " is not joinable";
+        throw bioExceptions(__FILE__,__LINE__,str.str()) ;
+      }
       pthread_join( theThreads[thread], NULL);
     #endif
     if (theExceptionPtr != nullptr) {
