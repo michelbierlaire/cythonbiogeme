@@ -315,6 +315,8 @@ void biogeme::setExpressions(std::vector<bioString> ll,
 
 void *computeFunctionForThread(void* fctPtr) {
   bioThreadArg *input = (bioThreadArg *) fctPtr;
+  DEBUG_MESSAGE("A0 Pointer: " << myLoglike) ;
+  DEBUG_MESSAGE("Expression: " << myLoglike->print()) ;
   try {
     DEBUG_MESSAGE("Call computeFunctionForThread") ;
     DEBUG_MESSAGE("Thread " << input->threadId) ;
@@ -398,6 +400,8 @@ void *computeFunctionForThread(void* fctPtr) {
     }
     else {
       DEBUG_MESSAGE("A11 not panel: Thread " << input->threadId) ;
+      DEBUG_MESSAGE("Pointer: " << myLoglike) ;
+      DEBUG_MESSAGE("Expression: " << myLoglike->print()) ;
       // No panel data
       bioUInt row ;
       if (myLoglike == NULL) {
