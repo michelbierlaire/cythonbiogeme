@@ -368,7 +368,7 @@ void *computeFunctionForThread(void* fctPtr) {
 	    (input->grad)[i] += w * fgh->g[i] ;
 	    if (input->calcHessian) {
 	      for (bioUInt j = 0 ; j < input->grad.size() ; ++j) {
-		(input->hessian)[i][j] += w * fgh->h[i][j] ;
+		    (input->hessian)[i][j] += w * fgh->h[i][j] ;
 	      }
 	    }
 	    if (input->calcBhhh) {
@@ -465,13 +465,15 @@ void *computeFunctionForThread(void* fctPtr) {
     theExceptionPtr = std::current_exception() ;
   }
 
-  //DEBUG_MESSAGE("RETURN") ;
+  DEBUG_MESSAGE("RETURN computeFunctionForThread for thread " << input->threadId) ;
   return NULL ;
 }
 
 
 void *simulFunctionForThread(void* fctPtr) {
+  DEBUG_MESSAGE("Simulation function") ;
   bioThreadArgSimul *input = (bioThreadArgSimul *) fctPtr;
+  DEBUG_MESSAGE("Thread " << input->threadId) ;
   try {
     bioSeveralExpressions* expressions = input->theFormulas.getExpressions() ;
     if (input->panel) {
@@ -519,6 +521,8 @@ void *simulFunctionForThread(void* fctPtr) {
   catch(...)  {
     theExceptionPtr = std::current_exception() ;
   }
+
+  DEBUG_MESSAGE("RETURN simulFunctionForThread for thread " << input->threadId) ;
 
   return NULL ;
 }
