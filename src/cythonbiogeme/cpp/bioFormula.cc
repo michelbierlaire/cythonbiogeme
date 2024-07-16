@@ -619,6 +619,7 @@ bioExpression* bioFormula::processFormula(bioString f) {
 }
 
 bioExpression* bioFormula::getExpression() {
+  DEBUG_MESSAGE("getExpression " << *this) ;
   return theFormula ;
 }
 
@@ -648,13 +649,11 @@ void bioFormula::setDraws(std::vector< std::vector< std::vector<bioReal> > >* d)
 }
 
 void bioFormula::setData(std::vector< std::vector<bioReal> >* d) {
-  DEBUG_MESSAGE("*** Call set data: " << *this) ;
   for (std::map<bioString,bioExpression*>::iterator i = expressions.begin() ;
        i != expressions.end() ;
        ++i) {
     i->second->setData(d) ;
   }
-  DEBUG_MESSAGE("*** Call set data DONE: " << *this) ;
 }
 
 void bioFormula::setMissingData(bioReal md) {
@@ -706,7 +705,7 @@ std::ostream& operator<<(std::ostream &str, const bioFormula& x) {
     str << x.theFormula->print() ;
   }
   else {
-    str << "Warning: null pointer" ;
+    str << "Warning: formula not processed yet." ;
   }
   return str ;
 }
