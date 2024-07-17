@@ -648,7 +648,7 @@ void biogeme::simulateSeveralFormulas(std::vector<std::vector<bioString> > formu
     }
     #ifdef _WIN32
     try {
-      theThreads[thread] = std::thread(computeFunctionForThread, theInput[thread]);
+      theThreads[thread] = std::thread(simulFunctionForThread, theSimulInput[thread]);
     } catch (const std::system_error& e) {
       std::stringstream str;
       str << "Error in creating thread " << thread << "/" << nbrOfThreads << ": " << e.what();
