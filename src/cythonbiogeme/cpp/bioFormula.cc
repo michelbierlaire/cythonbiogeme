@@ -60,7 +60,7 @@
 #include "bioExprMin.h"
 #include "bioExprMax.h"
 
-bioFormula::bioFormula() {
+bioFormula::bioFormula() : theFormula(NULL) {
 
 }
 
