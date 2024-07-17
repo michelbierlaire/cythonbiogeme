@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <set>
+#include <memory>
 #include <unordered_map>
 #include "bioTypes.h"
 #include "bioString.h"
