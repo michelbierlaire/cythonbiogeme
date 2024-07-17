@@ -74,7 +74,6 @@ void bioFormula::setExpression(std::vector<bioString> expressionsStrings) {
     // matter.
     theFormula = processFormula(*i) ;
   }
-  DEBUG_MESSAGE("*** Set expression: " << *this) ;
 }
 
 void bioFormula::resetExpression() {
@@ -627,7 +626,6 @@ void bioFormula::setParameters(std::vector<bioReal>* p) {
   for (std::map<bioString,bioExpression* >::iterator i = literals.begin() ;
        i != literals.end() ;
        ++i) {
-    DEBUG_MESSAGE("Set parameters for " << *this) ;
     i->second->setParameters(p) ;
   }
 }
