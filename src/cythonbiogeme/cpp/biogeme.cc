@@ -458,7 +458,7 @@ void *computeFunctionForThread(void* fctPtr) {
 	    }
       }
     }
-    
+
     //DEBUG_MESSAGE("End of loop on rows") ;
     input->theLoglike.setRowIndex(NULL) ;
     input->theLoglike.setIndividualIndex(NULL) ;
