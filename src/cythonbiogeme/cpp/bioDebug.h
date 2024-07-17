@@ -7,14 +7,15 @@
 //
 //--------------------------------------------------------------------
 
-#ifndef bioDebug_h
-#define bioDebug_h
+    #ifndef bioDebug_h
+    #define bioDebug_h
 
-#include <iostream>
+    #include <iostream>
 
-#ifdef DEBUG
-#define DEBUG_MESSAGE(message) {std::cout << __FILE__ << ":" << __LINE__ << " " << message << std::endl ; }
-#else
-#define DEBUG_MESSAGE(message) {;}
-#endif
-#endif
+    #ifdef DEBUG
+    #define DEBUG_MESSAGE(message) do { std::cout << __FILE__ << ":" << __LINE__ << " " << message << std::endl; } while (0)
+    #else
+    #define DEBUG_MESSAGE(message) do {} while (0)
+    #endif
+
+    #endif
