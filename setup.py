@@ -80,8 +80,8 @@ def get_ext_modules():
         )
     ]
 
-    if platform.system() == "XXXWindows":
-        ext_modules[0].extra_compile_args.append("-DMS_WIN64")
+    if platform.system() == "Windows":
+        ext_modules[0].extra_compile_args.append("/std:c++14")
         ext_modules[0].extra_link_args.extend(
             [
                 "-static",
