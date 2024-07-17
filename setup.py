@@ -91,7 +91,7 @@ def get_ext_modules():
         #        "-mms-bitfields",
         #        "-mwindows",
         #    ]
-        )
+        #)
 
     return cythonize(ext_modules)
 
