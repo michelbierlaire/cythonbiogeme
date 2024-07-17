@@ -75,7 +75,7 @@ def get_ext_modules():
             ],
             include_dirs=["src", numpy.get_include()],
             language="c++",
-            extra_compile_args=["-std=c++14"],
+            extra_compile_args=["-std=c++14", "-DDEBUG"],
             extra_link_args=["-std=c++14"],
         )
     ]
