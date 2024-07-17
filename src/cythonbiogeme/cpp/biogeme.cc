@@ -514,11 +514,13 @@ void *simulFunctionForThread(void* fctPtr) {
     if (input->panel) {
       bioUInt individual ;
       expressions->setIndividualIndex(&individual) ;
+      input->results.clear() ;
       for (individual = input->startData ;
 	   individual < input->endData ;
 	   ++individual) {
 	try {
 	  std::vector<bioReal > res = expressions->getValues() ;
+
 	  input->results.push_back(res) ;
 	}
 	catch(bioExceptions& e) {
@@ -535,12 +537,15 @@ void *simulFunctionForThread(void* fctPtr) {
       }
       expressions->setIndividualIndex(&row) ;
       expressions->setRowIndex(&row) ;
-      
+      input->results.clear() ;
       for (row = input->startData ;
 	   row < input->endData ;
 	   ++row) {
 	try {
 	  std::vector<bioReal > res = expressions->getValues() ;
+	  for (const bioReal& value : res) {
+        DEBUG_MESSAGE(" Expression value = " << value);
+      }
 	  input->results.push_back(res) ;
 	}
 	catch(bioExceptions& e) {
