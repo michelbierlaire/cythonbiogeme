@@ -65,60 +65,60 @@ public:
   static bioMemoryManagement* the() ;
   ~bioMemoryManagement() ;
   void releaseAllMemory() ;
-  bioExprFreeParameter* get_bioExprFreeParameter(bioUInt literalId,
+  std::unique_ptr<bioExprFreeParameter> get_bioExprFreeParameter(bioUInt literalId,
 						 bioUInt parameterId,
 						 bioString name) ;
-  bioExprFixedParameter* get_bioExprFixedParameter(bioUInt literalId,
+  std::unique_ptr<bioExprFixedParameter> get_bioExprFixedParameter(bioUInt literalId,
 						   bioUInt parameterId,
 						   bioString name) ; 
-  bioExprVariable* get_bioExprVariable(bioUInt literalId,
+  std::unique_ptr<bioExprVariable> get_bioExprVariable(bioUInt literalId,
 				       bioUInt variableId,
 				       bioString name) ; 
-  bioExprDraws* get_bioExprDraws(bioUInt uniqueId,
+  std::unique_ptr<bioExprDraws> get_bioExprDraws(bioUInt uniqueId,
 				 bioUInt drawId,
 				 bioString name) ;
-  bioExprRandomVariable* get_bioExprRandomVariable(bioUInt literalId,
+  std::unique_ptr<bioExprRandomVariable> get_bioExprRandomVariable(bioUInt literalId,
 						   bioUInt id,
 						   bioString name) ;
-  bioExprNumeric* get_bioExprNumeric(bioReal v) ;
-  bioExprPlus* get_bioExprPlus(bioExpression* ell, bioExpression* r) ;
-  bioExprMinus* get_bioExprMinus(bioExpression* ell, bioExpression* r) ;
-  bioExprTimes* get_bioExprTimes(bioExpression* ell, bioExpression* r) ;
-  bioExprDivide* get_bioExprDivide(bioExpression* ell, bioExpression* r) ;
-  bioExprPower* get_bioExprPower(bioExpression* ell, bioExpression* r) ;
-  bioExprPowerConstant* get_bioExprPowerConstant(bioExpression* ell, bioReal exponent) ;
-  bioExprAnd* get_bioExprAnd(bioExpression* ell, bioExpression* r) ;
-  bioExprOr* get_bioExprOr(bioExpression* ell, bioExpression* r) ;
-  bioExprEqual* get_bioExprEqual(bioExpression* ell, bioExpression* r) ;
-  bioExprNotEqual* get_bioExprNotEqual(bioExpression* ell, bioExpression* r) ;
-  bioExprLess* get_bioExprLess(bioExpression* ell, bioExpression* r) ;
-  bioExprLessOrEqual* get_bioExprLessOrEqual(bioExpression* ell, bioExpression* r) ;
-  bioExprGreater* get_bioExprGreater(bioExpression* ell, bioExpression* r) ;
-  bioExprGreaterOrEqual* get_bioExprGreaterOrEqual(bioExpression* ell, bioExpression* r) ;
-  bioExprMin* get_bioExprMin(bioExpression* ell, bioExpression* r) ;
-  bioExprMax* get_bioExprMax(bioExpression* ell, bioExpression* r) ;
-  bioExprUnaryMinus* get_bioExprUnaryMinus(bioExpression* ell) ;
-  bioExprMontecarlo* get_bioExprMontecarlo(bioExpression* ell) ;
-  bioExprNormalCdf* get_bioExprNormalCdf(bioExpression* ell) ;
-  bioExprPanelTrajectory* get_bioExprPanelTrajectory(bioExpression* ell) ;
-  bioExprExp* get_bioExprExp(bioExpression* ell) ;
-  bioExprSin* get_bioExprSin(bioExpression* ell) ;
-  bioExprCos* get_bioExprCos(bioExpression* ell) ;
-  bioExprLog* get_bioExprLog(bioExpression* ell) ;
-  bioExprLogzero* get_bioExprLogzero(bioExpression* ell) ;
-  bioExprDerive* get_bioExprDerive(bioExpression* c, bioUInt lid) ;
-  bioExprBelongsTo* get_bioExprBelongsTo(bioExpression* c, const std::set<bioReal>& the_set) ;
-  bioExprIntegrate* get_bioExprIntegrate(bioExpression* c, bioUInt lid) ;
-  bioExprLinearUtility* get_bioExprLinearUtility(std::vector<bioLinearTerm> t) ;
-  bioExprLogLogit* get_bioExprLogLogit(bioExpression* c,
+  std::unique_ptr<bioExprNumeric> get_bioExprNumeric(bioReal v) ;
+  std::unique_ptr<bioExprPlus> get_bioExprPlus(bioExpression* ell, bioExpression* r) ;
+  std::unique_ptr<bioExprMinus> get_bioExprMinus(bioExpression* ell, bioExpression* r) ;
+  std::unique_ptr<bioExprTimes> get_bioExprTimes(bioExpression* ell, bioExpression* r) ;
+  std::unique_ptr<bioExprDivide> get_bioExprDivide(bioExpression* ell, bioExpression* r) ;
+  std::unique_ptr<bioExprPower> get_bioExprPower(bioExpression* ell, bioExpression* r) ;
+  std::unique_ptr<bioExprPowerConstant> get_bioExprPowerConstant(bioExpression* ell, bioReal exponent) ;
+  std::unique_ptr<bioExprAnd> get_bioExprAnd(bioExpression* ell, bioExpression* r) ;
+  std::unique_ptr<bioExprOr> get_bioExprOr(bioExpression* ell, bioExpression* r) ;
+  std::unique_ptr<bioExprEqual> get_bioExprEqual(bioExpression* ell, bioExpression* r) ;
+  std::unique_ptr<bioExprNotEqual> get_bioExprNotEqual(bioExpression* ell, bioExpression* r) ;
+  std::unique_ptr<bioExprLess> get_bioExprLess(bioExpression* ell, bioExpression* r) ;
+  std::unique_ptr<bioExprLessOrEqual> get_bioExprLessOrEqual(bioExpression* ell, bioExpression* r) ;
+  std::unique_ptr<bioExprGreater> get_bioExprGreater(bioExpression* ell, bioExpression* r) ;
+  std::unique_ptr<bioExprGreaterOrEqual> get_bioExprGreaterOrEqual(bioExpression* ell, bioExpression* r) ;
+  std::unique_ptr<bioExprMin> get_bioExprMin(bioExpression* ell, bioExpression* r) ;
+  std::unique_ptr<bioExprMax> get_bioExprMax(bioExpression* ell, bioExpression* r) ;
+  std::unique_ptr<bioExprUnaryMinus> get_bioExprUnaryMinus(bioExpression* ell) ;
+  std::unique_ptr<bioExprMontecarlo> get_bioExprMontecarlo(bioExpression* ell) ;
+  std::unique_ptr<bioExprNormalCdf> get_bioExprNormalCdf(bioExpression* ell) ;
+  std::unique_ptr<bioExprPanelTrajectory> get_bioExprPanelTrajectory(bioExpression* ell) ;
+  std::unique_ptr<bioExprExp> get_bioExprExp(bioExpression* ell) ;
+  std::unique_ptr<bioExprSin> get_bioExprSin(bioExpression* ell) ;
+  std::unique_ptr<bioExprCos> get_bioExprCos(bioExpression* ell) ;
+  std::unique_ptr<bioExprLog> get_bioExprLog(bioExpression* ell) ;
+  std::unique_ptr<bioExprLogzero> get_bioExprLogzero(bioExpression* ell) ;
+  std::unique_ptr<bioExprDerive> get_bioExprDerive(bioExpression* c, bioUInt lid) ;
+  std::unique_ptr<bioExprBelongsTo> get_bioExprBelongsTo(bioExpression* c, const std::set<bioReal>& the_set) ;
+  std::unique_ptr<bioExprIntegrate> get_bioExprIntegrate(bioExpression* c, bioUInt lid) ;
+  std::unique_ptr<bioExprLinearUtility> get_bioExprLinearUtility(std::vector<bioLinearTerm> t) ;
+  std::unique_ptr<bioExprLogLogit> get_bioExprLogLogit(bioExpression* c,
 				       std::map<bioUInt,bioExpression*> u,
 				       std::map<bioUInt,bioExpression*> a) ;
-  bioExprLogLogitFullChoiceSet* get_bioExprLogLogitFullChoiceSet(bioExpression* c,
+  std::unique_ptr<bioExprLogLogitFullChoiceSet> get_bioExprLogLogitFullChoiceSet(bioExpression* c,
 								 std::map<bioUInt,bioExpression*> u) ;
-  bioExprConditionalSum* get_bioExprConditionalSum(std::unordered_map<bioExpression*, bioExpression*> d) ;
-  bioExprMultSum* get_bioExprMultSum(std::vector<bioExpression*> e) ;
-  bioExprElem* get_bioExprElem(bioExpression* k, std::map<bioUInt,bioExpression*> d) ;
-  bioSeveralExpressions* get_bioSeveralExpressions(std::vector<bioExpression*> exprs) ;
+  std::unique_ptr<bioExprConditionalSum> get_bioExprConditionalSum(std::unordered_map<bioExpression*, bioExpression*> d) ;
+  std::unique_ptr<bioExprMultSum> get_bioExprMultSum(std::vector<bioExpression*> e) ;
+  std::unique_ptr<bioExprElem> get_bioExprElem(bioExpression* k, std::map<bioUInt,bioExpression*> d) ;
+  std::unique_ptr<bioSeveralExpressions> get_bioSeveralExpressions(std::vector<bioExpression*> exprs) ;
 private:
   bioMemoryManagement() ;
   std::vector<std::unique_ptr<bioExprFreeParameter> > a_bioExprFreeParameter ;

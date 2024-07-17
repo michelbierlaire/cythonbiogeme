@@ -12,5 +12,9 @@
 
 #include <iostream>
 
+#ifdef DEBUG
 #define DEBUG_MESSAGE(message) {std::cout << __FILE__ << ":" << __LINE__ << " " << message << std::endl ; }
+#else
+#define DEBUG_MESSAGE(message) {;}
+#endif
 #endif

@@ -60,7 +60,7 @@
 #include "bioExprMin.h"
 #include "bioExprMax.h"
 
-bioFormula::bioFormula(): theFormula(NULL) {
+bioFormula::bioFormula() {
 
 }
 
@@ -90,10 +90,10 @@ bioFormula::~bioFormula() {
 }
 
 bioExpression* bioFormula::processFormula(bioString f) {
-  bioExpression* theExpression(NULL) ;
+  bioExpression* theExpression ;
   bioString typeOfExpression = extractParentheses('<','>',f) ;
   bioString id = extractParentheses('{','}',f) ;
-  std::map<bioString,bioExpression*>::iterator found = expressions.find(id) ;
+  std::map<bioString,bioExpression* >::iterator found = expressions.find(id) ;
   if (found != expressions.end()) {
     // The expression has already been processed
     return found->second ;
@@ -172,8 +172,8 @@ bioExpression* bioFormula::processFormula(bioString f) {
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator fl = expressions.find(items[1]) ;
-    std::map<bioString,bioExpression*>::iterator fr = expressions.find(items[2]) ;
+    std::map<bioString,bioExpression* >::iterator fl = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator fr = expressions.find(items[2]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprPlus(fl->second,fr->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
@@ -187,8 +187,8 @@ bioExpression* bioFormula::processFormula(bioString f) {
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator fl = expressions.find(items[1]) ;
-    std::map<bioString,bioExpression*>::iterator fr = expressions.find(items[2]) ;
+    std::map<bioString,bioExpression* >::iterator fl = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator fr = expressions.find(items[2]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprMinus(fl->second,fr->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
@@ -202,8 +202,8 @@ bioExpression* bioFormula::processFormula(bioString f) {
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator fl = expressions.find(items[1]) ;
-    std::map<bioString,bioExpression*>::iterator fr = expressions.find(items[2]) ;
+    std::map<bioString,bioExpression* >::iterator fl = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator fr = expressions.find(items[2]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprTimes(fl->second,fr->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
@@ -217,8 +217,8 @@ bioExpression* bioFormula::processFormula(bioString f) {
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator fl = expressions.find(items[1]) ;
-    std::map<bioString,bioExpression*>::iterator fr = expressions.find(items[2]) ;
+    std::map<bioString,bioExpression* >::iterator fl = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator fr = expressions.find(items[2]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprDivide(fl->second,fr->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
@@ -232,8 +232,8 @@ bioExpression* bioFormula::processFormula(bioString f) {
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator fl = expressions.find(items[1]) ;
-    std::map<bioString,bioExpression*>::iterator fr = expressions.find(items[2]) ;
+    std::map<bioString,bioExpression* >::iterator fl = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator fr = expressions.find(items[2]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprPower(fl->second,fr->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
@@ -247,8 +247,8 @@ bioExpression* bioFormula::processFormula(bioString f) {
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator fl = expressions.find(items[1]) ;
-    std::map<bioString,bioExpression*>::iterator fr = expressions.find(items[2]) ;
+    std::map<bioString,bioExpression* >::iterator fl = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator fr = expressions.find(items[2]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprAnd(fl->second,fr->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
@@ -262,8 +262,8 @@ bioExpression* bioFormula::processFormula(bioString f) {
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator fl = expressions.find(items[1]) ;
-    std::map<bioString,bioExpression*>::iterator fr = expressions.find(items[2]) ;
+    std::map<bioString,bioExpression* >::iterator fl = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator fr = expressions.find(items[2]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprOr(fl->second, fr->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
@@ -277,8 +277,8 @@ bioExpression* bioFormula::processFormula(bioString f) {
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator fl = expressions.find(items[1]) ;
-    std::map<bioString,bioExpression*>::iterator fr = expressions.find(items[2]) ;
+    std::map<bioString,bioExpression* >::iterator fl = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator fr = expressions.find(items[2]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprEqual(fl->second, fr->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
@@ -292,8 +292,8 @@ bioExpression* bioFormula::processFormula(bioString f) {
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator fl = expressions.find(items[1]) ;
-    std::map<bioString,bioExpression*>::iterator fr = expressions.find(items[2]) ;
+    std::map<bioString,bioExpression* >::iterator fl = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator fr = expressions.find(items[2]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprNotEqual(fl->second, fr->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
@@ -307,8 +307,8 @@ bioExpression* bioFormula::processFormula(bioString f) {
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator fl = expressions.find(items[1]) ;
-    std::map<bioString,bioExpression*>::iterator fr = expressions.find(items[2]) ;
+    std::map<bioString,bioExpression* >::iterator fl = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator fr = expressions.find(items[2]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprLess(fl->second,fr->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
@@ -322,8 +322,8 @@ bioExpression* bioFormula::processFormula(bioString f) {
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator fl = expressions.find(items[1]) ;
-    std::map<bioString,bioExpression*>::iterator fr = expressions.find(items[2]) ;
+    std::map<bioString,bioExpression* >::iterator fl = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator fr = expressions.find(items[2]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprLessOrEqual(fl->second,fr->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
@@ -337,8 +337,8 @@ bioExpression* bioFormula::processFormula(bioString f) {
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator fl = expressions.find(items[1]) ;
-    std::map<bioString,bioExpression*>::iterator fr = expressions.find(items[2]) ;
+    std::map<bioString,bioExpression* >::iterator fl = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator fr = expressions.find(items[2]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprGreater(fl->second,fr->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
@@ -352,8 +352,8 @@ bioExpression* bioFormula::processFormula(bioString f) {
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator fl = expressions.find(items[1]) ;
-    std::map<bioString,bioExpression*>::iterator fr = expressions.find(items[2]) ;
+    std::map<bioString,bioExpression* >::iterator fl = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator fr = expressions.find(items[2]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprGreaterOrEqual(fl->second,fr->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
@@ -367,8 +367,8 @@ bioExpression* bioFormula::processFormula(bioString f) {
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator fl = expressions.find(items[1]) ;
-    std::map<bioString,bioExpression*>::iterator fr = expressions.find(items[2]) ;
+    std::map<bioString,bioExpression* >::iterator fl = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator fr = expressions.find(items[2]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprMin(fl->second,fr->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
@@ -382,64 +382,64 @@ bioExpression* bioFormula::processFormula(bioString f) {
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator fl = expressions.find(items[1]) ;
-    std::map<bioString,bioExpression*>::iterator fr = expressions.find(items[2]) ;
+    std::map<bioString,bioExpression* >::iterator fl = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator fr = expressions.find(items[2]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprMax(fl->second,fr->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
   }
   else if (typeOfExpression == "UnaryMinus") {
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator e = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator e = expressions.find(items[1]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprUnaryMinus(e->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
   }
   else if (typeOfExpression == "MonteCarlo") {
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator e = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator e = expressions.find(items[1]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprMontecarlo(e->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
   }
   else if (typeOfExpression == "bioNormalCdf") {
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator e = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator e = expressions.find(items[1]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprNormalCdf(e->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
   }
   else if (typeOfExpression == "PanelLikelihoodTrajectory") {
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator e = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator e = expressions.find(items[1]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprPanelTrajectory(e->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
   }
   else if (typeOfExpression == "exp") {
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator e = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator e = expressions.find(items[1]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprExp(e->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
   }
   else if (typeOfExpression == "sin") {
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator e = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator e = expressions.find(items[1]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprSin(e->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
   }
   else if (typeOfExpression == "cos") {
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator e = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator e = expressions.find(items[1]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprCos(e->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
   }
   else if (typeOfExpression == "PowerConstant") {
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator e = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator e = expressions.find(items[1]) ;
     bioReal exponent = std::stod(items[2]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprPowerConstant(e->second, exponent) ;
     expressions[id] = theExpression ;
@@ -449,7 +449,7 @@ bioExpression* bioFormula::processFormula(bioString f) {
     bioString strNbrExpr = extractParentheses('(',')',f) ;
     bioUInt nbr_elements = std::stoi(strNbrExpr) ;
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator child = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator child = expressions.find(items[1]) ;
     std::set<bioReal> the_set ;    
     for (bioUInt i = 0 ; i < nbr_elements ; ++i) {
       std::stringstream ss(items[2+i]);
@@ -464,7 +464,7 @@ bioExpression* bioFormula::processFormula(bioString f) {
   }
   else if (typeOfExpression == "Derive") {
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator e = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator e = expressions.find(items[1]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprDerive(e->second,
 								  bioUInt(std::stoi(items[2]))) ;
     expressions[id] = theExpression ;
@@ -473,21 +473,21 @@ bioExpression* bioFormula::processFormula(bioString f) {
   else if (typeOfExpression == "Integrate") {
     std::vector<bioString> items = split(f,',') ;
     
-    std::map<bioString,bioExpression*>::iterator e = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator e = expressions.find(items[1]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprIntegrate(e->second,bioUInt(std::stoi(items[2]))) ;
     expressions[id] = theExpression ;
     return theExpression ;
   }
   else if (typeOfExpression == "log") {
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator e = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator e = expressions.find(items[1]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprLog(e->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
   }
   else if (typeOfExpression == "logzero") {
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator e = expressions.find(items[1]) ;
+    std::map<bioString,bioExpression* >::iterator e = expressions.find(items[1]) ;
     theExpression = bioMemoryManagement::the()->get_bioExprLogzero(e->second) ;
     expressions[id] = theExpression ;
     return theExpression ;
@@ -515,14 +515,14 @@ bioExpression* bioFormula::processFormula(bioString f) {
     bioString strNbrUtil = extractParentheses('(',')',f) ;
     bioUInt nbrUtil = std::stoi(strNbrUtil) ;
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator choice = expressions.find(items[1]) ;
-    std::map<bioUInt,bioExpression*> theUtils ;
-    std::map<bioUInt,bioExpression*> theAvails ;
+    std::map<bioString,bioExpression* >::iterator choice = expressions.find(items[1]) ;
+    std::map<bioUInt,bioExpression* > theUtils ;
+    std::map<bioUInt,bioExpression* > theAvails ;
     for (bioUInt i = 0 ; i < nbrUtil ; ++i) {
       bioUInt alt = std::stoi(items[2+3*i]) ;
-      std::map<bioString,bioExpression*>::iterator u = expressions.find(items[2+3*i+1]) ;
+      std::map<bioString,bioExpression* >::iterator u = expressions.find(items[2+3*i+1]) ;
       theUtils[alt] = u->second ;
-      std::map<bioString,bioExpression*>::iterator a = expressions.find(items[2+3*i+2]) ;
+      std::map<bioString,bioExpression* >::iterator a = expressions.find(items[2+3*i+2]) ;
       theAvails[alt] = a->second ;
       
     }
@@ -535,11 +535,11 @@ bioExpression* bioFormula::processFormula(bioString f) {
     bioString strNbrUtil = extractParentheses('(',')',f) ;
     bioUInt nbrUtil = std::stoi(strNbrUtil) ;
     std::vector<bioString> items = split(f,',') ;
-    std::map<bioString,bioExpression*>::iterator choice = expressions.find(items[1]) ;
-    std::map<bioUInt,bioExpression*> theUtils ;
+    std::map<bioString,bioExpression* >::iterator choice = expressions.find(items[1]) ;
+    std::map<bioUInt,bioExpression* > theUtils ;
     for (bioUInt i = 0 ; i < nbrUtil ; ++i) {
       bioUInt alt = std::stoi(items[2+3*i]) ;
-      std::map<bioString,bioExpression*>::iterator u = expressions.find(items[2+3*i+1]) ;
+      std::map<bioString,bioExpression* >::iterator u = expressions.find(items[2+3*i+1]) ;
       theUtils[alt] = u->second ;
     }
     theExpression = bioMemoryManagement::the()->get_bioExprLogLogitFullChoiceSet(choice->second,
@@ -551,9 +551,9 @@ bioExpression* bioFormula::processFormula(bioString f) {
     bioString strNbrTerms = extractParentheses('(',')',f) ;
     bioUInt nbrTerms = std::stoi(strNbrTerms) ;
     std::vector<bioString> items = split(f,',') ;
-    std::vector<bioExpression*> theExpressions ;
+    std::vector<bioExpression* > theExpressions ;
     for (bioUInt i = 0 ; i < nbrTerms ; ++i) {
-      std::map<bioString,bioExpression*>::iterator u = expressions.find(items[1+i]) ;
+      std::map<bioString,bioExpression* >::iterator u = expressions.find(items[1+i]) ;
       theExpressions.push_back(u->second) ;
     }
 
@@ -565,15 +565,15 @@ bioExpression* bioFormula::processFormula(bioString f) {
     bioString strNbrExpr = extractParentheses('(',')',f) ;
     bioUInt nbr_terms = std::stoi(strNbrExpr) ;
     std::vector<bioString> items = split(f,',') ;
-    std::unordered_map<bioExpression*, bioExpression*> the_terms ;
+    std::unordered_map<bioExpression* , bioExpression* > the_terms ;
     for (bioUInt i = 0 ; i < nbr_terms ; ++i) {
-      std::map<bioString,bioExpression*>::iterator key = expressions.find(items[1+2*i]) ;
+      std::map<bioString,bioExpression* >::iterator key = expressions.find(items[1+2*i]) ;
       if (key == expressions.end()) {
 	std::stringstream str ;
 	str << "No expression number: " << items[1+2*i] ;
 	throw bioExceptions(__FILE__,__LINE__,str.str()) ;
       }
-      std::map<bioString,bioExpression*>::iterator term = expressions.find(items[1+2*i+1]) ;
+      std::map<bioString,bioExpression* >::iterator term = expressions.find(items[1+2*i+1]) ;
       if (term == expressions.end()) {
 	std::stringstream str ;
 	str << "No expression number: " << items[1+2*i+1] ;
@@ -591,11 +591,11 @@ bioExpression* bioFormula::processFormula(bioString f) {
     std::vector<bioString> items = split(f,',') ;
 
     
-    std::map<bioString,bioExpression*>::iterator key = expressions.find(items[1]) ;
-    std::map<bioUInt,bioExpression*> theExpressions ;
+    std::map<bioString,bioExpression* >::iterator key = expressions.find(items[1]) ;
+    std::map<bioUInt,bioExpression* > theExpressions ;
     for (bioUInt i = 0 ; i < nbrExpr ; ++i) {
       bioUInt alt = std::stoi(items[2+2*i]) ;
-      std::map<bioString,bioExpression*>::iterator e = expressions.find(items[2+2*i+1]) ;
+      std::map<bioString,bioExpression* >::iterator e = expressions.find(items[2+2*i+1]) ;
       if (e == expressions.end()) {
 	std::stringstream str ;
 	str << "No expression number: " << items[2+2*i] ;
@@ -618,13 +618,13 @@ bioExpression* bioFormula::processFormula(bioString f) {
   return theExpression ;
 }
 
-bioExpression* bioFormula::getExpression() {
+bioExpression*  bioFormula::getExpression() {
   //DEBUG_MESSAGE("getExpression " << *this) ;
   return theFormula ;
 }
 
 void bioFormula::setParameters(std::vector<bioReal>* p) {
-  for (std::map<bioString,bioExpression*>::iterator i = literals.begin() ;
+  for (std::map<bioString,bioExpression* >::iterator i = literals.begin() ;
        i != literals.end() ;
        ++i) {
     i->second->setParameters(p) ;
@@ -632,7 +632,7 @@ void bioFormula::setParameters(std::vector<bioReal>* p) {
 }
 
 void bioFormula::setFixedParameters(std::vector<bioReal>* p) {
-  for (std::map<bioString,bioExpression*>::iterator i = literals.begin() ;
+  for (std::map<bioString,bioExpression* >::iterator i = literals.begin() ;
        i != literals.end() ;
        ++i) {
     i->second->setFixedParameters(p) ;
@@ -641,7 +641,7 @@ void bioFormula::setFixedParameters(std::vector<bioReal>* p) {
 
 
 void bioFormula::setDraws(std::vector< std::vector< std::vector<bioReal> > >* d) {
-  for (std::map<bioString,bioExpression*>::iterator i = expressions.begin() ;
+  for (std::map<bioString,bioExpression* >::iterator i = expressions.begin() ;
        i != expressions.end() ;
        ++i) {
     i->second->setDraws(d) ;
@@ -649,7 +649,7 @@ void bioFormula::setDraws(std::vector< std::vector< std::vector<bioReal> > >* d)
 }
 
 void bioFormula::setData(std::vector< std::vector<bioReal> >* d) {
-  for (std::map<bioString,bioExpression*>::iterator i = expressions.begin() ;
+  for (std::map<bioString,bioExpression* >::iterator i = expressions.begin() ;
        i != expressions.end() ;
        ++i) {
     i->second->setData(d) ;
@@ -657,7 +657,7 @@ void bioFormula::setData(std::vector< std::vector<bioReal> >* d) {
 }
 
 void bioFormula::setMissingData(bioReal md) {
-  for (std::map<bioString,bioExpression*>::iterator i = expressions.begin() ;
+  for (std::map<bioString,bioExpression* >::iterator i = expressions.begin() ;
        i != expressions.end() ;
        ++i) {
     i->second->setMissingData(md) ;
@@ -666,7 +666,7 @@ void bioFormula::setMissingData(bioReal md) {
 
 
 void bioFormula::setDataMap(std::vector< std::vector<bioUInt> >* dm) {
-  for (std::map<bioString,bioExpression*>::iterator i = expressions.begin() ;
+  for (std::map<bioString,bioExpression* >::iterator i = expressions.begin() ;
        i != expressions.end() ;
        ++i) {
     i->second->setDataMap(dm) ;
@@ -674,7 +674,7 @@ void bioFormula::setDataMap(std::vector< std::vector<bioUInt> >* dm) {
 }
 
 void bioFormula::setRowIndex(bioUInt* r) {
-  for (std::map<bioString,bioExpression*>::iterator e = expressions.begin() ;
+  for (std::map<bioString,bioExpression* >::iterator e = expressions.begin() ;
        e != expressions.end() ;
        ++e) {
     e->second->setRowIndex(r) ;
@@ -683,7 +683,7 @@ void bioFormula::setRowIndex(bioUInt* r) {
 }
 
 void bioFormula::setIndividualIndex(bioUInt* i) {
-  for (std::map<bioString,bioExpression*>::iterator e = expressions.begin() ;
+  for (std::map<bioString,bioExpression* >::iterator e = expressions.begin() ;
        e != expressions.end() ;
        ++e) {
     e->second->setIndividualIndex(i) ;

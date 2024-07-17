@@ -11,6 +11,8 @@ def get_ext_modules():
         setuptools.Extension(
             "cythonbiogeme.cythonbiogeme",
             sources=[
+                "src/cythonbiogeme/cpp/bioFormula.cc",
+                "src/cythonbiogeme/cpp/bioMemoryManagement.cc",
                 "src/cythonbiogeme/cpp/biogeme.cc",
                 "src/cythonbiogeme/cpp/bioDerivatives.cc",
                 "src/cythonbiogeme/cpp/bioExceptions.cc",
@@ -57,10 +59,8 @@ def get_ext_modules():
                 "src/cythonbiogeme/cpp/bioExprUnaryMinus.cc",
                 "src/cythonbiogeme/cpp/bioExprVariable.cc",
                 "src/cythonbiogeme/cpp/bioExpression.cc",
-                "src/cythonbiogeme/cpp/bioFormula.cc",
                 "src/cythonbiogeme/cpp/bioGaussHermite.cc",
                 "src/cythonbiogeme/cpp/bioGhFunction.cc",
-                "src/cythonbiogeme/cpp/bioMemoryManagement.cc",
                 "src/cythonbiogeme/cpp/bioNormalCdf.cc",
                 "src/cythonbiogeme/cpp/bioSeveralExpressions.cc",
                 "src/cythonbiogeme/cpp/bioSeveralFormulas.cc",
@@ -75,12 +75,12 @@ def get_ext_modules():
             ],
             include_dirs=["src", numpy.get_include()],
             language="c++",
-            extra_compile_args=["-std=c++11"],
-            extra_link_args=["-std=c++11"],
+            extra_compile_args=["-std=c++14"],
+            extra_link_args=["-std=c++14"],
         )
     ]
 
-    if platform.system() == "Windows":
+    if platform.system() == "XXXWindows":
         ext_modules[0].extra_compile_args.append("-DMS_WIN64")
         ext_modules[0].extra_link_args.extend(
             [
