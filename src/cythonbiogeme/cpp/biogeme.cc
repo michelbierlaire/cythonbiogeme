@@ -315,46 +315,29 @@ void biogeme::setExpressions(std::vector<bioString> ll,
 
 void *computeFunctionForThread(void* fctPtr) {
   bioThreadArg *input = (bioThreadArg *) fctPtr;
-  DEBUG_MESSAGE("Is defined? " << input->theLoglike.isDefined()) ;
   bioExpression* debug_pointer = input->theLoglike.getExpression() ;
-  DEBUG_MESSAGE("Pointer: " << debug_pointer) ;
-  DEBUG_MESSAGE("Formula: " << input->theLoglike) ;
-  DEBUG_MESSAGE("Expression: " << debug_pointer->print()) ;
 
   try {
     DEBUG_MESSAGE("Call computeFunctionForThread") ;
     DEBUG_MESSAGE("Thread " << input->threadId) ;
 
     bioReal w(1.0) ;
-    DEBUG_MESSAGE("A1: Thread " << input->threadId) ;
 
     input->result = 0.0 ;
-    DEBUG_MESSAGE("A2: Thread " << input->threadId) ;
 
     if (input->calcGradient) {
-      DEBUG_MESSAGE("A3: Thread " << input->threadId) ;
       std::fill(input->grad.begin(),input->grad.end(),0.0) ;
-      DEBUG_MESSAGE("A4: Thread " << input->threadId) ;
       if (input->calcHessian) {
-        DEBUG_MESSAGE("A5: Thread " << input->threadId) ;
-	    std::fill(input->hessian.begin(),input->hessian.end(),input->grad) ;
-	    DEBUG_MESSAGE("A6: Thread " << input->threadId) ;
+        std::fill(input->hessian.begin(),input->hessian.end(),input->grad) ;
       }
       if (input->calcBhhh) {
-        DEBUG_MESSAGE("A7: Thread " << input->threadId) ;
-	    std::fill(input->bhhh.begin(),input->bhhh.end(),input->grad) ;
-	    DEBUG_MESSAGE("A8: Thread " << input->threadId) ;
+        std::fill(input->bhhh.begin(),input->bhhh.end(),input->grad) ;
 
       }
     }
-    DEBUG_MESSAGE("A9: Thread " << input->threadId) ;
     bioExpression* myLoglike = input->theLoglike.getExpression() ;
-    DEBUG_MESSAGE("A10 Pointer: " << myLoglike) ;
-    DEBUG_MESSAGE("Expression: " << myLoglike->print()) ;
-    DEBUG_MESSAGE("A10: Thread " << input->threadId) ;
 
     if (input->panel) {
-      DEBUG_MESSAGE("A11 Panel: Thread " << input->threadId) ;
       // Panel data
       bioUInt individual ;
       myLoglike->setIndividualIndex(&individual) ;
@@ -364,11 +347,9 @@ void *computeFunctionForThread(void* fctPtr) {
 	    if (input->theWeight.isDefined()) {
 	      w = input->theWeight.getExpression()->getValue() ;
 	    }
-        DEBUG_MESSAGE("About to calculate panel derivatives, thread " << input->threadId) ;
         const bioDerivatives* fgh = myLoglike->getValueAndDerivatives(*input->literalIds,
 								      input->calcGradient,
 								      input->calcHessian) ;
-        DEBUG_MESSAGE("After calculate derivatives, thread " << input->threadId) ;
 
 	    if (!input->theWeight.isDefined()) {
 	      input->result += fgh->f ;
@@ -405,9 +386,6 @@ void *computeFunctionForThread(void* fctPtr) {
       }
     }
     else {
-      DEBUG_MESSAGE("A11 not panel: Thread " << input->threadId) ;
-      DEBUG_MESSAGE("Pointer: " << myLoglike) ;
-      DEBUG_MESSAGE("Expression: " << myLoglike->print()) ;
       // No panel data
       bioUInt row ;
       if (myLoglike == NULL) {
@@ -432,17 +410,12 @@ void *computeFunctionForThread(void* fctPtr) {
 	      if (input->theWeight.isDefined()) {
 	        w = input->theWeight.getExpression()->getValue() ;
 	      }
-          DEBUG_MESSAGE("A12 about to calculate derivatives: Thread " << input->threadId) ;
-          DEBUG_MESSAGE("Pointer: " << myLoglike) ;
-          DEBUG_MESSAGE("Expression: " << myLoglike->print()) ;
 
 	      const bioDerivatives* fgh = myLoglike->getValueAndDerivatives(*input->literalIds,
 						  input->calcGradient,
 						  input->calcHessian) ;
-		  DEBUG_MESSAGE("A13 done with calculate derivatives: Thread " << input->threadId) ;
 
 	      if (!input->theWeight.isDefined()) {
-	        DEBUG_MESSAGE("A14 no weight: Thread " << input->threadId) ;
 
 	        input->result += fgh->f ;
 
@@ -462,7 +435,6 @@ void *computeFunctionForThread(void* fctPtr) {
 	        }
 	      }
 	      else {
-	        DEBUG_MESSAGE("A14 weight: Thread " << input->threadId) ;
 	        input->result += w * fgh->f ;
 	        for (bioUInt i = 0 ; i < input->grad.size() ; ++i) {
 	          (input->grad)[i] += w * fgh->g[i] ;
@@ -486,8 +458,7 @@ void *computeFunctionForThread(void* fctPtr) {
 	    }
       }
     }
-    DEBUG_MESSAGE("End of loop on rows, thread " << input->threadId) ;
-
+    
     //DEBUG_MESSAGE("End of loop on rows") ;
     input->theLoglike.setRowIndex(NULL) ;
     input->theLoglike.setIndividualIndex(NULL) ;
@@ -677,7 +648,6 @@ void biogeme::simulateSeveralFormulas(std::vector<std::vector<bioString> > formu
     }
     #ifdef _WIN32
     try {
-      DEBUG_MESSAGE("Create thread " << thread) ;
       theThreads[thread] = std::thread(computeFunctionForThread, theInput[thread]);
     } catch (const std::system_error& e) {
       std::stringstream str;
@@ -708,7 +678,6 @@ void biogeme::simulateSeveralFormulas(std::vector<std::vector<bioString> > formu
 
   for (bioUInt thread = 0 ; thread < nbrOfThreads ; ++thread) {
     #ifdef _WIN32
-       DEBUG_MESSAGE("Join thread " << thread) ;
        if (theThreads[thread].joinable()) {
         theThreads[thread].join();
       }
@@ -723,7 +692,6 @@ void biogeme::simulateSeveralFormulas(std::vector<std::vector<bioString> > formu
     if (theExceptionPtr != nullptr) {
       std::rethrow_exception(theExceptionPtr);
     }
-    DEBUG_MESSAGE("All threads have finished") ;
     if (theSimulInput[thread]->results.size() !=
 	theSimulInput[thread]->endData - theSimulInput[thread]->startData) {
       std::stringstream str ;
@@ -740,7 +708,6 @@ void biogeme::simulateSeveralFormulas(std::vector<std::vector<bioString> > formu
       }
     }
   }
-  DEBUG_MESSAGE("Results have been collected") ;
   return ;
 }
 
