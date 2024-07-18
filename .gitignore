@@ -50,3 +50,4 @@ setup.py.new
 src/cythonbiogeme/cpp/bioExprLogLogit.cc.keep
 src/cythonbiogeme/cpp/bioExprLogLogitFullChoiceSet.cc.keep
 src/cythonbiogeme/cpp/bioExprLogLogitFullChoiceSet.h.keep
+.github/workflows/wheels.yml.keep
