@@ -318,9 +318,6 @@ void *computeFunctionForThread(void* fctPtr) {
   bioExpression* debug_pointer = input->theLoglike.getExpression() ;
 
   try {
-    DEBUG_MESSAGE("Call computeFunctionForThread") ;
-    DEBUG_MESSAGE("Thread " << input->threadId) ;
-
     bioReal w(1.0) ;
 
     input->result = 0.0 ;
@@ -471,15 +468,12 @@ void *computeFunctionForThread(void* fctPtr) {
     theExceptionPtr = std::current_exception() ;
   }
 
-  DEBUG_MESSAGE("RETURN computeFunctionForThread for thread " << input->threadId) ;
   return NULL ;
 }
 
 
 void *simulFunctionForThread(void* fctPtr) {
-  DEBUG_MESSAGE("Simulation function") ;
   bioThreadArgSimul *input = (bioThreadArgSimul *) fctPtr;
-  DEBUG_MESSAGE("Thread " << input->threadId) ;
   try {
     bioSeveralExpressions* expressions = input->theFormulas.getExpressions() ;
     if (input->panel) {
@@ -514,9 +508,6 @@ void *simulFunctionForThread(void* fctPtr) {
 	   ++row) {
 	try {
 	  std::vector<bioReal > res = expressions->getValues() ;
-	  for (const bioReal& value : res) {
-        DEBUG_MESSAGE(" Expression value = " << value);
-      }
 	  input->results.push_back(res) ;
 	}
 	catch(bioExceptions& e) {
@@ -533,7 +524,6 @@ void *simulFunctionForThread(void* fctPtr) {
     theExceptionPtr = std::current_exception() ;
   }
 
-  DEBUG_MESSAGE("RETURN simulFunctionForThread for thread " << input->threadId) ;
 
   return NULL ;
 }
@@ -623,7 +613,6 @@ void biogeme::simulateSeveralFormulas(std::vector<std::vector<bioString> > formu
 				      bioUInt t,
 				      std::vector< std::vector<bioReal> > data,
 				      bioReal* results) {
-  DEBUG_MESSAGE("Simulate several formulas with " << nbrOfThreads << " threads") ;
   nbrOfThreads = t ;
   theThreadMemorySimul.resize(nbrOfThreads) ;
   theThreadMemorySimul.setFormulas(formulas) ;
