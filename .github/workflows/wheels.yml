@@ -31,7 +31,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install setuptools wheel numpy Cython
 
-      - name: Install MSVC build tools (Windows only)
+      - name: Install MSVC build tools for Windows
 	if: matrix.os == 'windows-latest'
 	uses: ilammy/msvc-dev-cmd@v1
 
