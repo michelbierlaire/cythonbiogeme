@@ -33,10 +33,10 @@ jobs:
 
       - name: Install MSVC build tools (Windows only)
         if: runner.os == 'Windows'
-        run: |
-          choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --includeOptional"
-          choco install visualstudio2019-workload-vctools
-          refreshenv
+	uses: ilammy/msvc-dev-cmd@v1
+	with:
+          toolset: vs2019
+	  
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.17.0
         env:
