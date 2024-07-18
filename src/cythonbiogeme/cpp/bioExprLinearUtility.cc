@@ -41,23 +41,22 @@ const bioDerivatives* bioExprLinearUtility::getValueAndDerivatives(std::vector<b
   theDerivatives.with_h = hessian ;
 
   theDerivatives.resize(literalIds.size()) ;
-  
-  theDerivatives.f = 0.0 ;
+  theDerivatives.setEverythingToZero() ;
   std::map<bioString,bioReal> values = getAllLiteralValues() ;
   for (std::vector<bioLinearTerm>::iterator i =
 	 listOfTerms.begin() ;
-       i != listOfTerms.end() ;
-       ++i) {
-    if ((values[i->theBetaName] != 0.0) &&  (values[i->theVarName] != 0.0)) {
-      theDerivatives.f += values[i->theBetaName] * values[i->theVarName] ;
-    }
+     i != listOfTerms.end() ;
+     ++i) {
+     if ((values[i->theBetaName] != 0.0) &&  (values[i->theVarName] != 0.0)) {
+       theDerivatives.f += values[i->theBetaName] * values[i->theVarName] ;
+     }
   }
   if (gradient) {
-    theDerivatives.setDerivativesToZero() ;
     for (std::size_t i = 0 ; i < literalIds.size() ; ++i) {
-      theDerivatives.g[i] = values[theFriend[i]] ;
+       theDerivatives.g[i] = values[theFriend[i]] ;
     }
-  } 
+  }
+  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 

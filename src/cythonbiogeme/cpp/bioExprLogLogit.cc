@@ -9,14 +9,17 @@
 
 #include <sstream>
 #include <cmath>
+
 #include "bioDebug.h"
 #include "bioExceptions.h"
 #include "bioExprLogLogit.h"
+#include "bioConstants.h"
+
 
 bioExprLogLogit::bioExprLogLogit(bioExpression* c,
 				 std::map<bioUInt,bioExpression*> u,
 				 std::map<bioUInt,bioExpression*> a) :
-  choice(c), utilities(u), availabilities(a) {
+  choice(c), utilities(u), availabilities(a), expi(u.size()) {
   listOfChildren.push_back(choice) ;
   for (std::map<bioUInt,bioExpression*>::iterator i = u.begin() ;
        i != u.end();
@@ -28,6 +31,7 @@ bioExprLogLogit::bioExprLogLogit(bioExpression* c,
        ++i) {
     listOfChildren.push_back(i->second) ;
   }
+  Vs.reserve(utilities.size()) ;
 }
 
 bioExprLogLogit::~bioExprLogLogit() {
@@ -38,8 +42,8 @@ const bioDerivatives* bioExprLogLogit::getValueAndDerivatives(std::vector<bioUIn
 							bioBoolean gradient,
 							bioBoolean hessian) {
 
-  //DEBUG_MESSAGE("bioExprLogLogit getValueAndDerivatives") ;
-  
+  static const bioReal upper_bound = constants::get_upper_bound();
+  //static const bioReal almost_zero = constants::get_almost_zero();
   
   if (!gradient && hessian) {
     throw bioExceptions(__FILE__,
@@ -52,56 +56,54 @@ const bioDerivatives* bioExprLogLogit::getValueAndDerivatives(std::vector<bioUIn
 
   bioUInt n = literalIds.size() ;
   theDerivatives.resize(n) ;
-  
-  bioUInt chosen = bioUInt(choice->getValue()) ;
-  std::vector<bioDerivatives> Vs ;
-  const bioDerivatives* chosenUtility(NULL) ;
-  const bioDerivatives* V;
-  bioReal largestUtility(-bioMaxReal) ;
+  weightedSum.resize(n) ;
 
-  
-  for (std::map<bioUInt,bioExpression*>::iterator i = availabilities.begin() ;
-       i != availabilities.end() ;
-       ++i) {
-    bioReal av = i->second->getValue() ;
+  chosen = bioUInt(choice->getValue()) ;
+  const bioDerivatives* chosenUtility(NULL) ;
+  largestUtility = -bioMaxReal ;
+  Vs.clear();
+
+
+  for (std::map<bioUInt,bioExpression*>::iterator avail = availabilities.begin() ;
+       avail != availabilities.end() ;
+       ++avail) {
+  //for (const auto& avail : availabilities) {
+    av = avail->second->getValue() ;
     if (av == 0.0) {
-      if (i->first == chosen) {
-	theDerivatives.setDerivativesToZero() ;
-	if (std::numeric_limits<bioReal>::has_infinity) {
-	  theDerivatives.f = -std::numeric_limits<bioReal>::infinity() ;
-	}
-	else {
-	  theDerivatives.f = std::numeric_limits<bioReal>::lowest() ;
-	}
-	return &theDerivatives ;
+      if (avail->first == chosen) {
+        // The chosen alternative is not available
+	    theDerivatives.setDerivativesToZero() ;
+	    theDerivatives.f = -upper_bound ;
+        return &theDerivatives ;
       }
     }
     else {
-      //      DEBUG_MESSAGE("FIND THE EQUIVALENT OF ZIP IN C++")
-      std::map<bioUInt,bioExpression*>::iterator theUtil = utilities.find(i->first) ;
+      //std::map<bioUInt,bioExpression*>::iterator theUtil = utilities.find(i->first) ;
+
+      theUtil = utilities.find(avail->first) ;
       if (theUtil == utilities.end()) {
-	std::stringstream str ;
-	str << "Inconsistent dictionaries. Alternative " << i->first << " defined in the availabilities, and not in the utilities" ;
-	throw bioExceptions(__FILE__,__LINE__,str.str()) ;
+	    std::stringstream str ;
+	    str << "Inconsistent dictionaries. Alternative " << avail->first << " defined in the availabilities, and not in the utilities" ;
+	    throw bioExceptions(__FILE__,__LINE__,str.str()) ;
       }
       if (theUtil->second == NULL) {
-	throw bioExceptNullPointer(__FILE__,__LINE__,"formula") ;
+	    throw bioExceptNullPointer(__FILE__,__LINE__,"formula") ;
       }
-      V = theUtil->second->getValueAndDerivatives(literalIds,gradient,hessian) ;
+      const bioDerivatives* V = theUtil->second->getValueAndDerivatives(literalIds,gradient,hessian) ;
       if (V == NULL) {
-	throw bioExceptNullPointer(__FILE__,__LINE__,"result") ;
-
+	    throw bioExceptNullPointer(__FILE__,__LINE__,"result") ;
       }
       if (V->f > largestUtility) {
-	largestUtility = V->f ;
+        largestUtility = V->f ;
       }
-      if (i->first == chosen) {
-	chosenUtility = V ;
+      if (avail->first == chosen) {
+	    chosenUtility = V ;
       }
       Vs.push_back(*V) ;
     }
   }
-  
+
+
   if (chosenUtility == NULL) {
     std::stringstream str ;
     str << "Alternative "
@@ -115,58 +117,66 @@ const bioDerivatives* bioExprLogLogit::getValueAndDerivatives(std::vector<bioUIn
     throw bioExceptions(__FILE__,__LINE__,str.str()) ;
   }
   
-  bioReal maxexp = ceil(largestUtility / 10.0) * 10.0 ;
+  shift = ceil(largestUtility / 10.0) * 10.0 ;
 
 
-  std::vector<bioReal> expi(Vs.size()) ; ;
+
   
-  bioReal denominator(0.0) ;
+  denominator = 0.0 ;
   for (bioUInt k = 0 ; k < Vs.size() ; ++k) {
-    expi[k] = exp(Vs[k].f - maxexp) ;
+    expi[k] = exp(Vs[k].f - shift) ;
     denominator += expi[k] ;
   }
 
-  theDerivatives.f = chosenUtility->f - log(denominator) - maxexp ;
+  theDerivatives.f = chosenUtility->f - log(denominator) - shift ;
+
   if (gradient) {
-    std::vector<bioReal> weightedSum(n,0.0) ;
-    for (bioUInt j = 0 ; j < n ; ++j) {
+
+    std::fill(weightedSum.begin(), weightedSum.end(), 0.0);
+    for (bioUInt i = 0 ; i < n ; ++i) {
       for (bioUInt k = 0 ; k < Vs.size() ; ++k) {
-	if (Vs[k].g[j] != 0.0) {
-	  weightedSum[j] += Vs[k].g[j] * expi[k] ;
-	}
+	    if (Vs[k].g[i] != 0.0) {
+	      weightedSum[i] += Vs[k].g[i] * expi[k] ;
+	    }
       }
-      theDerivatives.g[j] = chosenUtility->g[j] ;
-      if (weightedSum[j] != 0.0) {
-	theDerivatives.g[j] -= weightedSum[j] / denominator ;
+      theDerivatives.g[i] = chosenUtility->g[i] ;
+      if (weightedSum[i] != 0.0) {
+	    theDerivatives.g[i] -= weightedSum[i] / denominator ;
       }
     }
-    
     if (hessian) {
-      bioReal dsquare = denominator * denominator ;
+      dsquare = denominator * denominator ;
       for (bioUInt i = 0 ; i < n ; ++i) {
-	for (bioUInt j = i ; j < n ; ++j) {
-	  bioReal dsecond(0.0) ;
-	  for (bioUInt k = 0 ; k < Vs.size() ; ++k ) {
-	    if (Vs[k].g[i] != 0 && Vs[k].g[j] != 0.0) {
-	      dsecond += expi[k] * Vs[k].g[i] * Vs[k].g[j] ;
+	    for (bioUInt j = i ; j < n ; ++j) {
+	      dsecond = 0.0 ;
+	      for (bioUInt k = 0 ; k < Vs.size() ; ++k ) {
+	        the_term = 0.0 ;
+	        if (Vs[k].g[i] != 0 && Vs[k].g[j] != 0.0) {
+	          the_term += Vs[k].g[i] * Vs[k].g[j] ;
+	        }
+	        vih = Vs[k].h[i][j] ;
+	        if (vih != 0.0) {
+	          the_term += vih ;
+	        }
+	        the_term *= expi[k] ;
+	        dsecond += the_term ;
+	      }
+	      v =  chosenUtility->h[i][j] ;
+	      v1 = 0.0 ;
+	      if (weightedSum[i] != 0.0 && weightedSum[j] != 0.0) {
+	        v1 = weightedSum[i] * weightedSum[j] / dsquare ;
+	      }
+	      v2 =  dsecond / denominator ;
+	      theDerivatives.h[i][j] = v+v1-v2 ;
+	      if ( i != j) {
+	        theDerivatives.h[j][i] = theDerivatives.h[i][j] ;
+	      }
 	    }
-	    bioReal vih = Vs[k].h[i][j] ;
-	    if (vih != 0.0) {
-	      dsecond += expi[k] * vih ;
-	    }
-	  }
-	  bioReal v =  chosenUtility->h[i][j] ;
-	  bioReal v1(0.0) ;
-	  if (weightedSum[i] != 0.0 && weightedSum[j] != 0.0) {
-	    v1 = weightedSum[i] * weightedSum[j] / dsquare ;
-	  }
-	  bioReal v2 = dsecond / denominator ;
-	  theDerivatives.h[i][j] = theDerivatives.h[j][i] = v+v1-v2 ;
-	}
       }
     }
   }
   //DEBUG_MESSAGE("bioExprLogLogit getValueAndDerivatives: DONE") ;
+  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 

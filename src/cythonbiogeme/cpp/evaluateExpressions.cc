@@ -239,8 +239,13 @@ void evaluateOneExpression::setNumberOfThreads(bioUInt n) {
   nbrOfThreads = n ;
 }
 
+
 void evaluateOneExpression::applyTheFormula() {
+  #ifdef _WIN32
+  std::vector<std::thread> theThreads(nbrOfThreads);
+  #else
   std::vector<pthread_t> theThreads(nbrOfThreads) ;
+  #endif
   for (bioUInt thread = 0 ; thread < nbrOfThreads ; ++thread) {
     if (theInput[thread] == NULL) {
       throw bioExceptNullPointer(__FILE__,__LINE__,"thread") ;
@@ -250,21 +255,43 @@ void evaluateOneExpression::applyTheFormula() {
     theInput[thread]->calcHessian = with_h ;
     theInput[thread]->calcBhhh = with_bhhh ;
 
-    bioUInt diagnostic = pthread_create(&(theThreads[thread]),
+
+    #ifdef _WIN32
+    try {
+      theThreads[thread] = std::thread(computeFunctionForThreadExpression, theInput[thread]);
+    } catch (const std::system_error& e) {
+      std::stringstream str;
+      str << "Error in creating thread " << thread << "/" << nbrOfThreads << ": " << e.what();
+      throw bioExceptions(__FILE__, __LINE__, str.str());
+    }
+    #else
+      bioUInt diagnostic = pthread_create(&(theThreads[thread]),
 					NULL,
 					computeFunctionForThreadExpression,
 					(void*) theInput[thread]) ;
     
-    if (diagnostic != 0) {
-      std::stringstream str ;
-      str << "Error " << diagnostic << " in creating thread " << thread << "/" << nbrOfThreads ;
-      throw bioExceptions(__FILE__,__LINE__,str.str()) ;
-    }
+      if (diagnostic != 0) {
+        std::stringstream str ;
+        str << "Error " << diagnostic << " in creating thread " << thread << "/" << nbrOfThreads ;
+        throw bioExceptions(__FILE__,__LINE__,str.str()) ;
+      }
+    #endif
   }
 
   results.clear() ;
   for (bioUInt thread = 0 ; thread < nbrOfThreads ; ++thread) {
-    pthread_join( theThreads[thread], NULL);
+    #ifdef _WIN32
+       if (theThreads[thread].joinable()) {
+        theThreads[thread].join();
+      }
+      else {
+        std::stringstream str ;
+        str << "Thread " << thread << "/" << nbrOfThreads  << " is not joinable";
+        throw bioExceptions(__FILE__,__LINE__,str.str()) ;
+      }
+    #else
+      pthread_join( theThreads[thread], NULL);
+    #endif
     if (theExceptionPtr != nullptr) {
       std::rethrow_exception(theExceptionPtr);
     }
@@ -280,7 +307,6 @@ void evaluateOneExpression::applyTheFormula() {
 }
 
 
-
 void *computeFunctionForThreadExpression(void* fctPtr) {
   try {
     bioThreadArgOneExpression *input = (bioThreadArgOneExpression *) fctPtr;
@@ -293,7 +319,7 @@ void *computeFunctionForThreadExpression(void* fctPtr) {
       for (individual = input->startData ;
 	   individual < input->endData ;
 	   ++individual) {
-      
+
 	const bioDerivatives* fgh = myExpression->getValueAndDerivatives(*input->literalIds,
 									 input->calcGradient,
 									 input->calcHessian) ;
@@ -310,14 +336,13 @@ void *computeFunctionForThreadExpression(void* fctPtr) {
       // No panel data
       bioUInt row ;
       if (myExpression == NULL) {
-	throw bioExceptNullPointer(__FILE__,__LINE__,"thread memory") ;
+	    throw bioExceptNullPointer(__FILE__,__LINE__,"thread memory") ;
       }
       myExpression->setIndividualIndex(&row) ;
       myExpression->setRowIndex(&row) ;
       for (row = input->startData ;
 	   row < input->endData ;
 	   ++row) {
-	
 	try {
 
 	  const bioDerivatives* fgh = myExpression->getValueAndDerivatives(*input->literalIds,
@@ -329,6 +354,7 @@ void *computeFunctionForThreadExpression(void* fctPtr) {
 	  else {
 	    input->theDerivatives.disaggregate(*fgh) ;
 	  }
+
 	}
 	catch(bioExceptions& e) {
 	  std::stringstream str ;

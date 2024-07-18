@@ -1,29 +1,30 @@
 //-*-c++-*----------------------%--------------------------------------
 //
-// File name : bioExprLog.h
-// @date   Tue Apr 17 12:16:20 2018
+// File name : bioExprBelongsTo.h
+// @date   Tue Sep 19 14:07:49 2023
 // @author Michel Bierlaire
-// @version Revision 1.0
 //
 //--------------------------------------------------------------------
 
-#ifndef bioExprLog_h
-#define bioExprLog_h
+#ifndef bioExprBelongsTo_h
+#define bioExprBelongsTo_h
 
+#include <set>
 #include "bioExpression.h"
 #include "bioString.h"
 
-class bioExprLog: public bioExpression {
-public:
-  bioExprLog(bioExpression* c) ;
-  ~bioExprLog() ;
+class bioExprBelongsTo: public bioExpression {
+ public:
+  bioExprBelongsTo(bioExpression* c, const std::set<bioReal>& the_set) ;
+  ~bioExprBelongsTo() ;
   virtual const bioDerivatives* getValueAndDerivatives(std::vector<bioUInt> literalIds,
 						       bioBoolean gradient,
 						       bioBoolean hessian) ;
   
   virtual bioString print(bioBoolean hp = false) const ;
-  
-protected:
+
+ protected:
   bioExpression* child ;
+  std::set<bioReal> the_set ;  
 };
 #endif

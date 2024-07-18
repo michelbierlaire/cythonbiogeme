@@ -45,9 +45,9 @@ const bioDerivatives* bioExprTimes::getValueAndDerivatives(std::vector<bioUInt> 
     rightResult = right->getValueAndDerivatives(literalIds,gradient,hessian) ;
     if (gradient) {
       if (rightResult->g.size() != literalIds.size()) {
-	std::stringstream str ;
-	str << "Wrong size for the result: " << rightResult->g.size() << " instead of " << literalIds.size() ;
-	throw bioExceptions(__FILE__,__LINE__,str.str()) ;	
+	    std::stringstream str ;
+	    str << "Wrong size for the result: " << rightResult->g.size() << " instead of " << literalIds.size() ;
+	    throw bioExceptions(__FILE__,__LINE__,str.str()) ;
       }
     }
     rightValue = rightResult->f ;
@@ -59,23 +59,23 @@ const bioDerivatives* bioExprTimes::getValueAndDerivatives(std::vector<bioUInt> 
       // l = 0, r = 0
       theDerivatives.f = 0.0 ;
       if (gradient) {
-	for (bioUInt i = 0 ; i < n ; ++i) {
-	  theDerivatives.g[i] = 0.0 ;
-	}
+	    for (bioUInt i = 0 ; i < n ; ++i) {
+	      theDerivatives.g[i] = 0.0 ;
+	    }
       }
     }
     else {
       // l = 0, r != 0
       theDerivatives.f = 0.0 ;
       if (gradient) {
-	for (bioUInt i = 0 ; i < n ; ++i) {
-	  if (leftResult->g[i] == 0.0) {
-	    theDerivatives.g[i] = 0.0 ;
-	  }
-	  else {
-	    theDerivatives.g[i] = leftResult->g[i] * rightValue ;
-	  }
-	}
+	    for (bioUInt i = 0 ; i < n ; ++i) {
+	      if (leftResult->g[i] == 0.0) {
+	        theDerivatives.g[i] = 0.0 ;
+	      }
+	      else {
+	        theDerivatives.g[i] = leftResult->g[i] * rightValue ;
+	      }
+	    }
       }
     }
   }
@@ -85,31 +85,31 @@ const bioDerivatives* bioExprTimes::getValueAndDerivatives(std::vector<bioUInt> 
       // l != 0, r = 0
       theDerivatives.f = 0.0 ;
       if (rightResult == NULL) {
-	throw bioExceptNullPointer(__FILE__,__LINE__,"Right result of multiplication") ;
+	    throw bioExceptNullPointer(__FILE__,__LINE__,"Right result of multiplication") ;
       }
       
       if (gradient) {
-	for (bioUInt i = 0 ; i < n ; ++i) {
-	  if (rightResult->g[i] == 0.0) {
-	    theDerivatives.g[i] = 0.0 ;
-	  }
-	  else {
-	    theDerivatives.g[i] = rightResult->g[i] * leftResult->f ;
-	  }
-	}
+	    for (bioUInt i = 0 ; i < n ; ++i) {
+	      if (rightResult->g[i] == 0.0) {
+	        theDerivatives.g[i] = 0.0 ;
+	      }
+	      else {
+	        theDerivatives.g[i] = rightResult->g[i] * leftResult->f ;
+	      }
+	    }
       }
     }
     else {
       // l != 0, r != 0
       theDerivatives.f = leftResult->f * rightValue ;
       if (gradient) {
-	if (rightResult == NULL) {
-	  throw bioExceptNullPointer(__FILE__,__LINE__,"Right result of multiplication") ;
-	}
-	for (bioUInt i = 0 ; i < n ; ++i) {
-	  theDerivatives.g[i] = leftResult->g[i] * rightResult->f + 
-	    rightResult->g[i] * leftResult->f ;
-	}
+	    if (rightResult == NULL) {
+	      throw bioExceptNullPointer(__FILE__,__LINE__,"Right result of multiplication") ;
+	    }
+	    for (bioUInt i = 0 ; i < n ; ++i) {
+	      theDerivatives.g[i] = leftResult->g[i] * rightResult->f +
+	        rightResult->g[i] * leftResult->f ;
+	    }
       }
     }
   }
@@ -117,33 +117,33 @@ const bioDerivatives* bioExprTimes::getValueAndDerivatives(std::vector<bioUInt> 
   if (hessian) {
     for (bioUInt i = 0 ; i < n ; ++i) {
       for (bioUInt j = i ; j < n ; ++j) {
-	bioReal v ;
-	if (rightValue != 0.0) {
-	  bioReal lhs = leftResult->h[i][j] ;
-	  v = lhs * rightValue ;
-	}
-	else {
-	  v = 0.0 ;
-	}
-	if (leftResult->f != 0) {
-	  bioReal rhs = rightResult->h[i][j] ;
-	  v += rhs * leftResult->f ;
-	}
-	if (rightResult == NULL) {
-	  throw(bioExceptNullPointer(__FILE__,__LINE__,"rightResult")) ;
-	}
-	if (leftResult->g[i] != 0.0 && rightResult->g[j] != 0.0) {
-	  v += leftResult->g[i] * rightResult->g[j] ;
-	}
-	if (leftResult->g[j] != 0.0 && rightResult->g[i] != 0.0) {
-	  v += leftResult->g[j] * rightResult->g[i] ;
-	}
-	theDerivatives.h[i][j] = theDerivatives.h[j][i] = v ;
+	    bioReal v ;
+	    if (rightValue != 0.0) {
+	      bioReal lhs = leftResult->h[i][j] ;
+	      v = lhs * rightValue ;
+	    }
+	    else {
+	      v = 0.0 ;
+	    }
+	    if (leftResult->f != 0) {
+	      bioReal rhs = rightResult->h[i][j] ;
+	      v += rhs * leftResult->f ;
+	    }
+	    if (rightResult == NULL) {
+	      throw(bioExceptNullPointer(__FILE__,__LINE__,"rightResult")) ;
+	    }
+	    if (leftResult->g[i] != 0.0 && rightResult->g[j] != 0.0) {
+	      v += leftResult->g[i] * rightResult->g[j] ;
+	    }
+	    if (leftResult->g[j] != 0.0 && rightResult->g[i] != 0.0) {
+	      v += leftResult->g[j] * rightResult->g[i] ;
+	    }
+	    theDerivatives.h[i][j] = theDerivatives.h[j][i] = v ;
       }
     }    
   }
 
-  
+  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 

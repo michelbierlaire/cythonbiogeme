@@ -10,7 +10,11 @@
 #ifndef bioThreadMemorySimul_h
 #define bioThreadMemorySimul_h
 
-#include <pthread.h> 
+#ifdef _WIN32
+#include <thread>
+#else
+#include <pthread.h>
+#endif
 #include <vector>
 #include <map>
 #include "bioTypes.h"

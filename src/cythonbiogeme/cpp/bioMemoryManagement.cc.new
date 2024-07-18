@@ -81,7 +81,7 @@ void bioMemoryManagement::releaseAllMemory() {
   //  delete(*i) ;
   //}
   a_bioExprFixedParameter.clear() ;
-
+    
   //for (std::vector<bioExprVariable*>::iterator i = a_bioExprVariable.begin() ;
   //     i != a_bioExprVariable.end() ;
   //     ++i) {
@@ -312,14 +312,14 @@ void bioMemoryManagement::releaseAllMemory() {
   //  delete(*i) ;
   //}
   a_bioExprElem.clear() ;
-
+  
   //for (std::vector<bioSeveralExpressions*>::iterator i = a_bioSeveralExpressions.begin() ;
   //     i != a_bioSeveralExpressions.end() ;
   //     ++i) {
   //  delete(*i) ;
   //}
   a_bioSeveralExpressions.clear() ;
-
+  
 }
 
 bioMemoryManagement* bioMemoryManagement::the() {
@@ -331,321 +331,279 @@ bioMemoryManagement* bioMemoryManagement::the() {
   
 }
 
-bioExprFreeParameter* bioMemoryManagement::get_bioExprFreeParameter(bioUInt literalId,
+std::vector<std::unique_ptr<bioExprFreeParameter> bioMemoryManagement::get_bioExprFreeParameter(bioUInt literalId,
 								     bioUInt parameterId,
 								     bioString name) {
-
-  std::unique_ptr<bioExprFreeParameter> ptr = std::make_unique<bioExprFreeParameter>(literalId,
+  std::vector<std::unique_ptr<bioExprFreeParameter> ptr = std::make_unique<bioExprFreeParameter>(literalId,
 						       parameterId,
 						       name) ;
-  bioExprFreeParameter* rawPtr = ptr.get() ;
-  a_bioExprFreeParameter.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  a_bioExprFreeParameter.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprFixedParameter* bioMemoryManagement::get_bioExprFixedParameter(bioUInt literalId,
 								      bioUInt parameterId,
 								      bioString name) {
-  std::unique_ptr<bioExprFixedParameter> ptr = std::make_unique<bioExprFixedParameter>(literalId,
+  bioExprFixedParameter* ptr = new bioExprFixedParameter(literalId,
 							 parameterId,
 							 name) ;
-  bioExprFixedParameter* rawPtr = ptr.get() ;
-  a_bioExprFixedParameter.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  a_bioExprFixedParameter.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprVariable* bioMemoryManagement::get_bioExprVariable(bioUInt literalId,
 						      bioUInt variableId,
 						      bioString name) {
-  std::unique_ptr<bioExprVariable> ptr = std::make_unique<bioExprVariable>(literalId,
+  bioExprVariable* ptr = new bioExprVariable(literalId,
 					     variableId,
 					     name) ;
-  bioExprVariable* rawPtr = ptr.get() ;
-  a_bioExprVariable.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  a_bioExprVariable.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprDraws* bioMemoryManagement::get_bioExprDraws(bioUInt uniqueId,
 					     bioUInt drawId,
 					     bioString name) {
-  std::unique_ptr<bioExprDraws> ptr = std::make_unique<bioExprDraws>(uniqueId,
+  bioExprDraws* ptr = new bioExprDraws(uniqueId,
 			 drawId,
 			 name) ;
-  bioExprDraws* rawPtr = ptr.get() ;
-  a_bioExprDraws.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  a_bioExprDraws.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprRandomVariable* bioMemoryManagement::get_bioExprRandomVariable(bioUInt literalId,
 									bioUInt id,
 									bioString name) {
-  std::unique_ptr<bioExprRandomVariable> ptr = std::make_unique<bioExprRandomVariable>(literalId,
+  bioExprRandomVariable* ptr = new bioExprRandomVariable(literalId,
 							 id,
 							 name) ;
-  bioExprRandomVariable* rawPtr = ptr.get() ;
-  a_bioExprRandomVariable.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  a_bioExprRandomVariable.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprNumeric* bioMemoryManagement::get_bioExprNumeric(bioReal v) {
-  std::unique_ptr<bioExprNumeric> ptr = std::make_unique<bioExprNumeric>(v) ;
-  bioExprNumeric* rawPtr = ptr.get() ;
-  a_bioExprNumeric.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprNumeric* ptr = new bioExprNumeric(v) ;
+  a_bioExprNumeric.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprPlus* bioMemoryManagement::get_bioExprPlus(bioExpression* ell, bioExpression* r) {
-  std::unique_ptr<bioExprPlus> ptr = std::make_unique<bioExprPlus>(ell, r) ;
-  bioExprPlus* rawPtr = ptr.get() ;
-  a_bioExprPlus.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprPlus* ptr = new bioExprPlus(ell, r) ;
+  a_bioExprPlus.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprMinus* bioMemoryManagement::get_bioExprMinus(bioExpression* ell, bioExpression* r) {
-  std::unique_ptr<bioExprMinus> ptr = std::make_unique<bioExprMinus>(ell, r) ;
-  bioExprMinus* rawPtr = ptr.get() ;
-  a_bioExprMinus.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprMinus* ptr = new bioExprMinus(ell, r) ;
+  a_bioExprMinus.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprTimes* bioMemoryManagement::get_bioExprTimes(bioExpression* ell, bioExpression* r) {
-  std::unique_ptr<bioExprTimes> ptr = std::make_unique<bioExprTimes>(ell, r) ;
-  bioExprTimes* rawPtr = ptr.get() ;
-  a_bioExprTimes.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprTimes* ptr = new bioExprTimes(ell, r) ;
+  a_bioExprTimes.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprDivide* bioMemoryManagement::get_bioExprDivide(bioExpression* ell, bioExpression* r) {
-  std::unique_ptr<bioExprDivide> ptr = std::make_unique<bioExprDivide>(ell, r) ;
-  bioExprDivide* rawPtr = ptr.get() ;
-  a_bioExprDivide.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprDivide* ptr = new bioExprDivide(ell, r) ;
+  a_bioExprDivide.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprPower* bioMemoryManagement::get_bioExprPower(bioExpression* ell, bioExpression* r) {
-  std::unique_ptr<bioExprPower> ptr = std::make_unique<bioExprPower>(ell, r) ;
-  bioExprPower* rawPtr = ptr.get() ;
-  a_bioExprPower.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprPower* ptr = new bioExprPower(ell, r) ;
+  a_bioExprPower.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprPowerConstant* bioMemoryManagement::get_bioExprPowerConstant(bioExpression* ell, bioReal exponent) {
-  std::unique_ptr<bioExprPowerConstant> ptr = std::make_unique<bioExprPowerConstant>(ell, exponent) ;
-  bioExprPowerConstant* rawPtr = ptr.get() ;
-  a_bioExprPowerConstant.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprPowerConstant* ptr = new bioExprPowerConstant(ell, exponent) ;
+  a_bioExprPowerConstant.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprAnd* bioMemoryManagement::get_bioExprAnd(bioExpression* ell, bioExpression* r) {
-  std::unique_ptr<bioExprAnd> ptr = std::make_unique<bioExprAnd>(ell, r) ;
-  bioExprAnd* rawPtr = ptr.get() ;
-  a_bioExprAnd.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprAnd* ptr = new bioExprAnd(ell, r) ;
+  a_bioExprAnd.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprOr* bioMemoryManagement::get_bioExprOr(bioExpression* ell, bioExpression* r) {
-  std::unique_ptr<bioExprOr> ptr = std::make_unique<bioExprOr>(ell, r) ;
-  bioExprOr* rawPtr = ptr.get()  ;
-  a_bioExprOr.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprOr* ptr = new bioExprOr(ell, r) ;
+  a_bioExprOr.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprEqual* bioMemoryManagement::get_bioExprEqual(bioExpression* ell, bioExpression* r) {
-  std::unique_ptr<bioExprEqual> ptr = std::make_unique<bioExprEqual>(ell, r) ;
-  bioExprEqual* rawPtr = ptr.get() ;
-  a_bioExprEqual.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprEqual* ptr = new bioExprEqual(ell, r) ;
+  a_bioExprEqual.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprNotEqual* bioMemoryManagement::get_bioExprNotEqual(bioExpression* ell, bioExpression* r) {
-  std::unique_ptr<bioExprNotEqual> ptr = std::make_unique<bioExprNotEqual>(ell, r) ;
-  bioExprNotEqual* rawPtr = ptr.get() ;
-  a_bioExprNotEqual.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprNotEqual* ptr = new bioExprNotEqual(ell, r) ;
+  a_bioExprNotEqual.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprLess* bioMemoryManagement::get_bioExprLess(bioExpression* ell, bioExpression* r) {
-  std::unique_ptr<bioExprLess> ptr = std::make_unique<bioExprLess>(ell, r) ;
-  bioExprLess* rawPtr = ptr.get() ;
-  a_bioExprLess.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprLess* ptr = new bioExprLess(ell, r) ;
+  a_bioExprLess.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprLessOrEqual* bioMemoryManagement::get_bioExprLessOrEqual(bioExpression* ell,
 								bioExpression* r) {
-  std::unique_ptr<bioExprLessOrEqual> ptr = std::make_unique<bioExprLessOrEqual>(ell, r) ;
-  bioExprLessOrEqual* rawPtr = ptr.get() ;
-  a_bioExprLessOrEqual.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprLessOrEqual* ptr = new bioExprLessOrEqual(ell, r) ;
+  a_bioExprLessOrEqual.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprGreater* bioMemoryManagement::get_bioExprGreater(bioExpression* ell,
 							bioExpression* r) {
-  std::unique_ptr<bioExprGreater> ptr = std::make_unique<bioExprGreater>(ell, r) ;
-  bioExprGreater* rawPtr = ptr.get() ;
-  a_bioExprGreater.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprGreater* ptr = new bioExprGreater(ell, r) ;
+  a_bioExprGreater.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprGreaterOrEqual* bioMemoryManagement::get_bioExprGreaterOrEqual(bioExpression* ell,
 								      bioExpression* r) {
-  std::unique_ptr<bioExprGreaterOrEqual> ptr = std::make_unique<bioExprGreaterOrEqual>(ell, r) ;
-  bioExprGreaterOrEqual* rawPtr = ptr.get() ;
-  a_bioExprGreaterOrEqual.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprGreaterOrEqual* ptr = new bioExprGreaterOrEqual(ell, r) ;
+  a_bioExprGreaterOrEqual.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprMin* bioMemoryManagement::get_bioExprMin(bioExpression* ell,
 						bioExpression* r) {
-  std::unique_ptr<bioExprMin> ptr = std::make_unique<bioExprMin>(ell, r) ;
-  bioExprMin* rawPtr = ptr.get() ;
-  a_bioExprMin.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprMin* ptr = new bioExprMin(ell, r) ;
+  a_bioExprMin.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprMax* bioMemoryManagement::get_bioExprMax(bioExpression* ell,
 						bioExpression* r) {
-  std::unique_ptr<bioExprMax> ptr = std::make_unique<bioExprMax>(ell, r) ;
-  bioExprMax* rawPtr = ptr.get() ;
-  a_bioExprMax.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprMax* ptr = new bioExprMax(ell, r) ;
+  a_bioExprMax.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprUnaryMinus* bioMemoryManagement::get_bioExprUnaryMinus(bioExpression* c) {
-  std::unique_ptr<bioExprUnaryMinus> ptr = std::make_unique<bioExprUnaryMinus>(c) ;
-  bioExprUnaryMinus* rawPtr = ptr.get() ;
-  a_bioExprUnaryMinus.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprUnaryMinus* ptr = new bioExprUnaryMinus(c) ;
+  a_bioExprUnaryMinus.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprMontecarlo* bioMemoryManagement::get_bioExprMontecarlo(bioExpression* c) {
-  std::unique_ptr<bioExprMontecarlo> ptr = std::make_unique<bioExprMontecarlo>(c) ;
-  bioExprMontecarlo* rawPtr = ptr.get() ;
-  a_bioExprMontecarlo.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprMontecarlo* ptr = new bioExprMontecarlo(c) ;
+  a_bioExprMontecarlo.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprNormalCdf* bioMemoryManagement::get_bioExprNormalCdf(bioExpression* c) {
-  std::unique_ptr<bioExprNormalCdf> ptr = std::make_unique<bioExprNormalCdf>(c) ;
-  bioExprNormalCdf* rawPtr = ptr.get() ;
-  a_bioExprNormalCdf.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprNormalCdf* ptr = new bioExprNormalCdf(c) ;
+  a_bioExprNormalCdf.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprPanelTrajectory* bioMemoryManagement::get_bioExprPanelTrajectory(bioExpression* c) {
-  std::unique_ptr<bioExprPanelTrajectory> ptr = std::make_unique<bioExprPanelTrajectory>(c) ;
-  bioExprPanelTrajectory* rawPtr = ptr.get() ;
-  a_bioExprPanelTrajectory.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprPanelTrajectory* ptr = new bioExprPanelTrajectory(c) ;
+  a_bioExprPanelTrajectory.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprExp* bioMemoryManagement::get_bioExprExp(bioExpression* c) {
-  std::unique_ptr<bioExprExp> ptr = std::make_unique<bioExprExp>(c) ;
-  bioExprExp* rawPtr = ptr.get() ;
-  a_bioExprExp.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprExp* ptr = new bioExprExp(c) ;
+  a_bioExprExp.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprSin* bioMemoryManagement::get_bioExprSin(bioExpression* c) {
-  std::unique_ptr<bioExprSin> ptr = std::make_unique<bioExprSin>(c) ;
-  bioExprSin* rawPtr = ptr.get() ;
-  a_bioExprSin.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprSin* ptr = new bioExprSin(c) ;
+  a_bioExprSin.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprCos* bioMemoryManagement::get_bioExprCos(bioExpression* c) {
-  std::unique_ptr<bioExprCos> ptr = std::make_unique<bioExprCos>(c) ;
-  bioExprCos* rawPtr = ptr.get() ;
-  a_bioExprCos.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprCos* ptr = new bioExprCos(c) ;
+  a_bioExprCos.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprLog* bioMemoryManagement::get_bioExprLog(bioExpression* c) {
-  std::unique_ptr<bioExprLog> ptr = std::make_unique<bioExprLog>(c) ;
-  bioExprLog* rawPtr = ptr.get() ;
-  a_bioExprLog.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprLog* ptr = new bioExprLog(c) ;
+  a_bioExprLog.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprLogzero* bioMemoryManagement::get_bioExprLogzero(bioExpression* c) {
-  std::unique_ptr<bioExprLogzero> ptr = std::make_unique<bioExprLogzero>(c) ;
-  bioExprLogzero* rawPtr = ptr.get() ;
-  a_bioExprLogzero.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprLogzero* ptr = new bioExprLogzero(c) ;
+  a_bioExprLogzero.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprBelongsTo* bioMemoryManagement::get_bioExprBelongsTo(bioExpression* c, const std::set<bioReal>& the_set) {
-  std::unique_ptr<bioExprBelongsTo> ptr = std::make_unique<bioExprBelongsTo>(c, the_set) ;
-  bioExprBelongsTo* rawPtr = ptr.get() ;
-  a_bioExprBelongsTo.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprBelongsTo* ptr = new bioExprBelongsTo(c, the_set) ;
+  a_bioExprBelongsTo.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprDerive* bioMemoryManagement::get_bioExprDerive(bioExpression* c, bioUInt lid) {
-  std::unique_ptr<bioExprDerive> ptr = std::make_unique<bioExprDerive>(c, lid) ;
-  bioExprDerive* rawPtr = ptr.get() ;
-  a_bioExprDerive.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprDerive* ptr = new bioExprDerive(c, lid) ;
+  a_bioExprDerive.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprIntegrate* bioMemoryManagement::get_bioExprIntegrate(bioExpression* c, bioUInt lid) {
-  std::unique_ptr<bioExprIntegrate> ptr = std::make_unique<bioExprIntegrate>(c, lid) ;
-  bioExprIntegrate* rawPtr = ptr.get() ;
-  a_bioExprIntegrate.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprIntegrate* ptr = new bioExprIntegrate(c, lid) ;
+  a_bioExprIntegrate.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprLinearUtility* bioMemoryManagement::get_bioExprLinearUtility(std::vector<bioLinearTerm> t) {
-  std::unique_ptr<bioExprLinearUtility> ptr = std::make_unique<bioExprLinearUtility>(t) ;
-  bioExprLinearUtility* rawPtr = ptr.get() ;
-  a_bioExprLinearUtility.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprLinearUtility* ptr = new bioExprLinearUtility(t) ;
+  a_bioExprLinearUtility.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprLogLogit* bioMemoryManagement::get_bioExprLogLogit(bioExpression* c,
 							  std::map<bioUInt,bioExpression*> u,
 							  std::map<bioUInt,bioExpression*> a) {
-  std::unique_ptr<bioExprLogLogit> ptr = std::make_unique<bioExprLogLogit>(c, u, a) ;
-  bioExprLogLogit* rawPtr = ptr.get() ;
-  a_bioExprLogLogit.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprLogLogit* ptr = new bioExprLogLogit(c, u, a) ;
+  a_bioExprLogLogit.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprLogLogitFullChoiceSet* bioMemoryManagement::get_bioExprLogLogitFullChoiceSet(bioExpression* c,
 							  std::map<bioUInt,bioExpression*> u) {
-  std::unique_ptr<bioExprLogLogitFullChoiceSet> ptr = std::make_unique<bioExprLogLogitFullChoiceSet>(c, u) ;
-  bioExprLogLogitFullChoiceSet* rawPtr = ptr.get() ;
-  a_bioExprLogLogitFullChoiceSet.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprLogLogitFullChoiceSet* ptr = new bioExprLogLogitFullChoiceSet(c, u) ;
+  a_bioExprLogLogitFullChoiceSet.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprMultSum* bioMemoryManagement::get_bioExprMultSum(std::vector<bioExpression*> e) {
-  std::unique_ptr<bioExprMultSum> ptr = std::make_unique<bioExprMultSum>(e) ;
-  bioExprMultSum* rawPtr = ptr.get() ;
-  a_bioExprMultSum.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprMultSum* ptr = new bioExprMultSum(e) ;
+  a_bioExprMultSum.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprConditionalSum* bioMemoryManagement::get_bioExprConditionalSum(std::unordered_map<bioExpression*, bioExpression*> d) {
-  std::unique_ptr<bioExprConditionalSum> ptr = std::make_unique<bioExprConditionalSum>(d) ;
-  bioExprConditionalSum* rawPtr = ptr.get() ;
-  a_bioExprConditionalSum.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprConditionalSum* ptr = new bioExprConditionalSum(d) ;
+  a_bioExprConditionalSum.push_back(ptr) ;
+  return ptr ;
 }
 
 bioExprElem* bioMemoryManagement::get_bioExprElem(bioExpression* k,
 						  std::map<bioUInt,bioExpression*> d) {
-  std::unique_ptr<bioExprElem> ptr = std::make_unique<bioExprElem>(k, d) ;
-  bioExprElem* rawPtr = ptr.get() ;
-  a_bioExprElem.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioExprElem* ptr = new bioExprElem(k, d) ;
+  a_bioExprElem.push_back(ptr) ;
+  return ptr ;
 }
 
 bioSeveralExpressions* bioMemoryManagement::get_bioSeveralExpressions(std::vector<bioExpression*> exprs) {
-  std::unique_ptr<bioSeveralExpressions> ptr = std::make_unique<bioSeveralExpressions>(exprs) ;
-  bioSeveralExpressions* rawPtr = ptr.get() ;
-  a_bioSeveralExpressions.push_back(std::move(ptr)) ;
-  return rawPtr ;
+  bioSeveralExpressions* ptr = new bioSeveralExpressions(exprs) ;
+  a_bioSeveralExpressions.push_back(ptr) ;
+  return ptr ;
 }
 
 

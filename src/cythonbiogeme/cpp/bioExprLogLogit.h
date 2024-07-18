@@ -26,6 +26,21 @@ protected:
   bioExpression* choice ;
   std::map<bioUInt,bioExpression*> utilities ;
   std::map<bioUInt,bioExpression*> availabilities ;
+  std::vector<bioDerivatives> Vs ;
+  std::vector<bioReal> expi ;
+
+  bioUInt chosen ;
+  bioReal largestUtility ;
+  bioReal av ;
+  std::map<bioUInt,bioExpression*>::iterator theUtil ;
+  bioReal shift ;
+  bioReal denominator ;
+  std::vector<bioReal> weightedSum ;
+  bioReal dsquare ;
+  bioReal dsecond ;
+  bioReal the_term ;
+  bioReal vih ;
+  bioReal v, v1, v2 ;
 };
 
 

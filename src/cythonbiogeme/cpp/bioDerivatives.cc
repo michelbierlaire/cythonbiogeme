@@ -12,6 +12,8 @@
 #include "bioDebug.h"
 #include "bioDerivatives.h"
 #include "bioExceptions.h"
+#include "bioConstants.h"
+
 
 // Dealing with exceptions across threads
 static std::exception_ptr theExceptionPtr = nullptr ;
@@ -54,7 +56,7 @@ void bioDerivatives::resize(bioUInt n) {
 	// Bug with STL.
 	
 	// When n is large, the following statement kills the process (with
-	// a message "bad_alloc") without trigerring an exception.
+	// a message "bad_alloc") without triggering an exception.
 	// The only way to deal with it would be to abandon the use of STL vectors.
 	// This would require a significant re-engineering of the code.
 	// This may be considered in the future.
@@ -224,37 +226,77 @@ bioDerivatives& bioDerivatives::operator+=(const bioDerivatives& rhs) {
       }
     }
   }
+  dealWithNumericalIssues() ;
+
   return *this ;
 }
 
 void bioDerivatives::dealWithNumericalIssues() {
+  static const bioReal upper_bound = constants::get_upper_bound();
+
+
   bioUInt n = getSize() ;
   if (!std::isfinite(f)) {
-    f = -std::numeric_limits<bioReal>::max() ;
+    if (std::signbit(f)) {
+      // It is a negative number
+      f = -upper_bound ;
+    }
+    else {
+      f = upper_bound ;
+    }
   }
+  else {
+    f = project(f) ;
+  }
+
   if (with_g) {
     for (bioUInt i = 0 ; i < n ; ++i) {
       if (!std::isfinite(g[i])) {
-	g[i] = -std::numeric_limits<bioReal>::max() ;
+        if (std::signbit(g[i])) {
+          // It is a negative number
+	      g[i] = -upper_bound ;
+        }
+        else {
+          g[i] = upper_bound ;
+        }
+      }
+      else {
+        g[i] = project(g[i]) ;
       }
       if (with_h) {
-	for (bioUInt j = i ; j < n ; ++j) {
-	  if (!std::isfinite(h[i][j])) {
-	    h[i][j] = -std::numeric_limits<bioReal>::max() ;
-	  }
-	}
+	    for (bioUInt j = i ; j < n ; ++j) {
+	      if (!std::isfinite(h[i][j])) {
+	        if (std::signbit(h[i][j])) {
+	          h[i][j] = -upper_bound ;
+	        }
+	        else {
+	          h[i][j] = upper_bound ;
+	        }
+	      }
+	      else {
+	        h[i][j] = project(h[i][j]) ;
+	      }
+	    }
       }
       if (with_bhhh) {
-	if (n != bhhh.size()) {
-	  std::stringstream str ;
-	  str << "Incorrect allocation of memory for BHHH: " << bhhh.size() << " instead of " << n ;  
-	  throw bioExceptions(__FILE__, __LINE__, str.str()) ;
-	}
-	for (bioUInt j = i ; j < n ; ++j) {
-	  if (!std::isfinite(bhhh[i][j])) {
-	    bhhh[i][j] = -std::numeric_limits<bioReal>::max() ;
-	  }
-	}
+	    if (n != bhhh.size()) {
+	      std::stringstream str ;
+	      str << "Incorrect allocation of memory for BHHH: " << bhhh.size() << " instead of " << n ;
+	      throw bioExceptions(__FILE__, __LINE__, str.str()) ;
+	    }
+	    for (bioUInt j = i ; j < n ; ++j) {
+	      if (!std::isfinite(bhhh[i][j])) {
+	        if (std::signbit(bhhh[i][j])) {
+	          bhhh[i][j] = -upper_bound ;
+	        }
+	        else {
+	          bhhh[i][j] = upper_bound ;
+	        }
+	      }
+	      else {
+	        bhhh[i][j] = project(bhhh[i][j]) ;
+	      }
+	    }
       }
     }
   }

@@ -47,35 +47,36 @@ const bioDerivatives* bioExprPlus::getValueAndDerivatives(std::vector<bioUInt> l
   else {
     theDerivatives.f = leftResult->f + rightResult->f ;
   }
+
   if (gradient) {
     for (bioUInt i = 0 ; i < n ; ++i) {
       if (leftResult->g[i] == 0.0) {
-	theDerivatives.g[i] = rightResult->g[i] ;
-
+	    theDerivatives.g[i] = rightResult->g[i] ;
       }
       else if (rightResult->g[i] == 0.0) {
-	theDerivatives.g[i] = leftResult->g[i] ;
+	    theDerivatives.g[i] = leftResult->g[i] ;
       }
       else {
-	theDerivatives.g[i] = leftResult->g[i] + rightResult->g[i] ;
+	    theDerivatives.g[i] = leftResult->g[i] + rightResult->g[i] ;
       }
       if (hessian) {
-	for (bioUInt j = 0 ; j < n ; ++j) {
-	  if (leftResult->h[i][j] == 0.0) {
-	    theDerivatives.h[i][j] = rightResult->h[i][j] ;
-	  }
-	  else if (rightResult->h[i][j] == 0.0) {
-	    theDerivatives.h[i][j] = leftResult->h[i][j] ;
-	    
-	  }
-	  else {
-	    theDerivatives.h[i][j] = leftResult->h[i][j] + rightResult->h[i][j] ;
-	  }
-	}
+	    for (bioUInt j = 0 ; j < n ; ++j) {
+	      if (leftResult->h[i][j] == 0.0) {
+	        theDerivatives.h[i][j] = rightResult->h[i][j] ;
+	      }
+	      else if (rightResult->h[i][j] == 0.0) {
+	        theDerivatives.h[i][j] = leftResult->h[i][j] ;
+	      }
+	      else {
+	        theDerivatives.h[i][j] = leftResult->h[i][j] + rightResult->h[i][j] ;
+	      }
+	    }
       }
     }
   }
-  //  DEBUG_MESSAGE("Plus - Calculated: " << str.length() << " = " << theDerivatives.f) ;
+
+  theDerivatives.dealWithNumericalIssues() ;
+
   return &theDerivatives ;
 }
 

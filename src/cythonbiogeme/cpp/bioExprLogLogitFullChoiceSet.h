@@ -1,8 +1,9 @@
 //-*-c++-*------------------------------------------------------------
 //
 // File name : bioExprLogLogitFullChoiceSet.h
-// @date   Fri Jul  5 11:14:07 2019
+// @date   Fri Apr 13 15:14:17 2018
 // @author Michel Bierlaire
+// @version Revision 1.0
 //
 //--------------------------------------------------------------------
 
@@ -24,6 +25,21 @@ class bioExprLogLogitFullChoiceSet: public bioExpression {
 protected:
   bioExpression* choice ;
   std::map<bioUInt,bioExpression*> utilities ;
+  std::vector<bioDerivatives> Vs ;
+  std::vector<bioReal> expi ;
+
+  bioUInt chosen ;
+  bioReal largestUtility ;
+  bioReal av ;
+  std::map<bioUInt,bioExpression*>::iterator theUtil ;
+  bioReal shift ;
+  bioReal denominator ;
+  std::vector<bioReal> weightedSum ;
+  bioReal dsquare ;
+  bioReal dsecond ;
+  bioReal the_term ;
+  bioReal vih ;
+  bioReal v, v1, v2 ;
 };
 
 

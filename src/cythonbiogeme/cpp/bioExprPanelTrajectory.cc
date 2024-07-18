@@ -81,7 +81,7 @@ const bioDerivatives* bioExprPanelTrajectory::getValueAndDerivatives(std::vector
       throw bioExceptions(__FILE__,__LINE__,str.str()) ;
     }
   }
-  // So far, we have calculated the derivatrives for the log
+  // So far, we have calculated the derivatives for the log
   // likelihood. We need now to store the derivatives of the
   // likelihood of the trajectory.
 
@@ -89,20 +89,20 @@ const bioDerivatives* bioExprPanelTrajectory::getValueAndDerivatives(std::vector
   if (gradient) {
     for (bioUInt i = 0 ; i < n ; ++i) {
       if (hessian) {
-	for (bioUInt j = i ; j < n ; ++j) {
-	  if (theDerivatives.g[i] != 0.0 && theDerivatives.g[j] != 0.0) {
-	    theDerivatives.h[i][j] += theDerivatives.g[i] * theDerivatives.g[j] ;
-	  }
-	  theDerivatives.h[i][j] *= theDerivatives.f ;
-	}
+	    for (bioUInt j = i ; j < n ; ++j) {
+	      if (theDerivatives.g[i] != 0.0 && theDerivatives.g[j] != 0.0) {
+	        theDerivatives.h[i][j] += theDerivatives.g[i] * theDerivatives.g[j] ;
+	      }
+	      theDerivatives.h[i][j] *= theDerivatives.f ;
+	    }
       }
       theDerivatives.g[i] *= theDerivatives.f ;
     }
   }
   if (hessian) {
     for (bioUInt i = 0 ; i < n ; ++i) {
-      for (bioUInt j = i ; j < n ; ++j) {
-	theDerivatives.h[j][i] = theDerivatives.h[i][j] ;
+      for (bioUInt j = i+1 ; j < n ; ++j) {
+	    theDerivatives.h[j][i] = theDerivatives.h[i][j] ;
       }
     }
   }

@@ -13,6 +13,8 @@
 #include "bioDebug.h"
 #include "bioExceptions.h"
 #include "bioExprGaussHermite.h"
+#include "bioConstants.h"
+
 
 
 bioExprIntegrate::bioExprIntegrate(bioExpression* c, bioUInt id) :
@@ -32,36 +34,26 @@ const bioDerivatives* bioExprIntegrate::getValueAndDerivatives(std::vector<bioUI
 
   theDerivatives.resize(literalIds.size()) ;
 
-  bioExprGaussHermite theGh(child,literalIds,rvId,gradient,hessian) ;   
+  bioExprGaussHermite theGh(child, literalIds, rvId, gradient, hessian) ;
   bioGaussHermite theGhAlgo(&theGh) ;
   std::vector<bioReal> r = theGhAlgo.integrate() ;
-  theDerivatives.f = r[0] ;
+  theDerivatives.f = project(r[0]) ;
   bioUInt n = literalIds.size() ;
   if (gradient) {
     for (bioUInt j = 0 ; j < n ; ++j) {
-      if (std::isfinite(r[j+1])) {
-	theDerivatives.g[j] = r[j+1] ;
-      }
-      else {
-	theDerivatives.g[j] = bioMaxReal ;
-      }
+	   theDerivatives.g[j] = r[j+1] ;
     }
   }
   if (hessian) {
     bioUInt index = 1 + theDerivatives.g.size() ;
     for (bioUInt i = 0 ; i < n ; ++i) {
       for (bioUInt j = i ; j < n ; ++j) {
-	if (std::isfinite(r[index])) {
-	  theDerivatives.h[i][j] = theDerivatives.h[j][i] = r[index] ;
-	}
-	else {
-	  theDerivatives.h[i][j] = theDerivatives.h[j][i] = bioMaxReal ;
+	    theDerivatives.h[i][j] = theDerivatives.h[j][i] = r[index] ;
+	  }
 	}
 	++index ;
-      }
-    }
   }
-
+  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 

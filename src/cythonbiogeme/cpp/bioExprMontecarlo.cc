@@ -11,6 +11,7 @@
 #include <sstream>
 #include "bioDebug.h"
 #include "bioExceptions.h"
+#include "bioConstants.h"
 
 bioExprMontecarlo::bioExprMontecarlo(bioExpression* c) :
   child(c) {
@@ -39,15 +40,15 @@ const bioDerivatives* bioExprMontecarlo::getValueAndDerivatives(std::vector<bioU
   child->setDrawIndex(&drawIndex) ;
   for (drawIndex = 0 ; drawIndex < numberOfDraws ; ++drawIndex) {
     const bioDerivatives* childResult = child->getValueAndDerivatives(literalIds,gradient,hessian) ;
-    theDerivatives.f += childResult->f ;
+    theDerivatives.f += project(childResult->f) ;
     if (gradient) {
       for (bioUInt i = 0 ; i < n ; ++i) {
-	theDerivatives.g[i] += childResult->g[i] ;
-	if (hessian) {
-	  for (bioUInt j = i ; j < n ; ++j) {
-	    theDerivatives.h[i][j] += childResult->h[i][j] ;
-	  }
-	}
+        theDerivatives.g[i] += childResult->g[i] ;
+	    if (hessian) {
+	      for (bioUInt j = i ; j < n ; ++j) {
+	        theDerivatives.h[i][j] += childResult->h[i][j] ;
+	      }
+	    }
       }
     }
   }
@@ -57,19 +58,20 @@ const bioDerivatives* bioExprMontecarlo::getValueAndDerivatives(std::vector<bioU
     for (bioUInt i = 0 ; i < n ; ++i) {
       theDerivatives.g[i] /= bioReal(numberOfDraws) ;
       if (hessian) {
-	for (bioUInt j = i ; j < n ; ++j) {
-	  theDerivatives.h[i][j] /= bioReal(numberOfDraws) ;
-	}
+	    for (bioUInt j = i ; j < n ; ++j) {
+	      theDerivatives.h[i][j] /= bioReal(numberOfDraws) ;
+	    }
       }
     }
   }
   if (hessian) {
     for (bioUInt i = 0 ; i < n ; ++i) {
-      for (bioUInt j = i ; j < n ; ++j) {
-	theDerivatives.h[j][i] = theDerivatives.h[i][j] ;
+      for (bioUInt j = i+1 ; j < n ; ++j) {
+	    theDerivatives.h[j][i] = theDerivatives.h[i][j] ;
       }
     }
   }
+  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 

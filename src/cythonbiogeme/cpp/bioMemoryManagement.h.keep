@@ -11,7 +11,6 @@
 
 #include <vector>
 #include <set>
-#include <memory>
 #include <unordered_map>
 #include "bioTypes.h"
 #include "bioString.h"
@@ -122,46 +121,46 @@ public:
   bioSeveralExpressions* get_bioSeveralExpressions(std::vector<bioExpression*> exprs) ;
 private:
   bioMemoryManagement() ;
-  std::vector<std::unique_ptr<bioExprFreeParameter> > a_bioExprFreeParameter ;
-  std::vector<std::unique_ptr<bioExprFixedParameter> > a_bioExprFixedParameter ;
-  std::vector<std::unique_ptr<bioExprVariable> > a_bioExprVariable ;
-  std::vector<std::unique_ptr<bioExprDraws> > a_bioExprDraws ;
-  std::vector<std::unique_ptr<bioExprRandomVariable> > a_bioExprRandomVariable ;
-  std::vector<std::unique_ptr<bioExprNumeric> > a_bioExprNumeric ;
-  std::vector<std::unique_ptr<bioExprPlus> > a_bioExprPlus ;
-  std::vector<std::unique_ptr<bioExprMinus> > a_bioExprMinus ;
-  std::vector<std::unique_ptr<bioExprTimes> > a_bioExprTimes ;
-  std::vector<std::unique_ptr<bioExprDivide> > a_bioExprDivide ;
-  std::vector<std::unique_ptr<bioExprPower> > a_bioExprPower ;
-  std::vector<std::unique_ptr<bioExprPowerConstant> > a_bioExprPowerConstant ;
-  std::vector<std::unique_ptr<bioExprAnd> > a_bioExprAnd ;
-  std::vector<std::unique_ptr<bioExprOr> > a_bioExprOr ;
-  std::vector<std::unique_ptr<bioExprEqual> > a_bioExprEqual ;
-  std::vector<std::unique_ptr<bioExprNotEqual> > a_bioExprNotEqual ;
-  std::vector<std::unique_ptr<bioExprLess> > a_bioExprLess ;
-  std::vector<std::unique_ptr<bioExprLessOrEqual> > a_bioExprLessOrEqual ;
-  std::vector<std::unique_ptr<bioExprGreater> > a_bioExprGreater ;
-  std::vector<std::unique_ptr<bioExprGreaterOrEqual> > a_bioExprGreaterOrEqual ;
-  std::vector<std::unique_ptr<bioExprMin> > a_bioExprMin ;
-  std::vector<std::unique_ptr<bioExprMax> > a_bioExprMax ;
-  std::vector<std::unique_ptr<bioExprUnaryMinus> > a_bioExprUnaryMinus ;
-  std::vector<std::unique_ptr<bioExprMontecarlo> > a_bioExprMontecarlo ;
-  std::vector<std::unique_ptr<bioExprNormalCdf> > a_bioExprNormalCdf ;
-  std::vector<std::unique_ptr<bioExprPanelTrajectory> > a_bioExprPanelTrajectory ;
-  std::vector<std::unique_ptr<bioExprExp> > a_bioExprExp ;
-  std::vector<std::unique_ptr<bioExprSin> > a_bioExprSin ;
-  std::vector<std::unique_ptr<bioExprCos> > a_bioExprCos ;
-  std::vector<std::unique_ptr<bioExprLog> > a_bioExprLog ;
-  std::vector<std::unique_ptr<bioExprLogzero> > a_bioExprLogzero ;
-  std::vector<std::unique_ptr<bioExprDerive> > a_bioExprDerive ;
-  std::vector<std::unique_ptr<bioExprBelongsTo> > a_bioExprBelongsTo ;
-  std::vector<std::unique_ptr<bioExprIntegrate> > a_bioExprIntegrate ;
-  std::vector<std::unique_ptr<bioExprLinearUtility> > a_bioExprLinearUtility ;
-  std::vector<std::unique_ptr<bioExprLogLogit> > a_bioExprLogLogit ;
-  std::vector<std::unique_ptr<bioExprLogLogitFullChoiceSet> > a_bioExprLogLogitFullChoiceSet ;
-  std::vector<std::unique_ptr<bioExprMultSum> > a_bioExprMultSum ;
-  std::vector<std::unique_ptr<bioExprConditionalSum> > a_bioExprConditionalSum ;
-  std::vector<std::unique_ptr<bioExprElem> > a_bioExprElem ;
-  std::vector<std::unique_ptr<bioSeveralExpressions> > a_bioSeveralExpressions ;
+  std::vector<bioExprFreeParameter*> a_bioExprFreeParameter ;
+  std::vector<bioExprFixedParameter*> a_bioExprFixedParameter ;
+  std::vector<bioExprVariable*> a_bioExprVariable ;
+  std::vector<bioExprDraws*> a_bioExprDraws ;
+  std::vector<bioExprRandomVariable*> a_bioExprRandomVariable ;
+  std::vector<bioExprNumeric*> a_bioExprNumeric ;
+  std::vector<bioExprPlus*> a_bioExprPlus ;
+  std::vector<bioExprMinus*> a_bioExprMinus ;
+  std::vector<bioExprTimes*> a_bioExprTimes ;
+  std::vector<bioExprDivide*> a_bioExprDivide ;
+  std::vector<bioExprPower*> a_bioExprPower ;
+  std::vector<bioExprPowerConstant*> a_bioExprPowerConstant ;
+  std::vector<bioExprAnd*> a_bioExprAnd ;
+  std::vector<bioExprOr*> a_bioExprOr ;
+  std::vector<bioExprEqual*> a_bioExprEqual ;
+  std::vector<bioExprNotEqual*> a_bioExprNotEqual ;
+  std::vector<bioExprLess*> a_bioExprLess ;
+  std::vector<bioExprLessOrEqual*> a_bioExprLessOrEqual ;
+  std::vector<bioExprGreater*> a_bioExprGreater ;
+  std::vector<bioExprGreaterOrEqual*> a_bioExprGreaterOrEqual ;
+  std::vector<bioExprMin*> a_bioExprMin ;
+  std::vector<bioExprMax*> a_bioExprMax ;
+  std::vector<bioExprUnaryMinus*> a_bioExprUnaryMinus ;
+  std::vector<bioExprMontecarlo*> a_bioExprMontecarlo ;
+  std::vector<bioExprNormalCdf*> a_bioExprNormalCdf ;
+  std::vector<bioExprPanelTrajectory*> a_bioExprPanelTrajectory ;
+  std::vector<bioExprExp*> a_bioExprExp ;
+  std::vector<bioExprSin*> a_bioExprSin ;
+  std::vector<bioExprCos*> a_bioExprCos ;
+  std::vector<bioExprLog*> a_bioExprLog ;
+  std::vector<bioExprLogzero*> a_bioExprLogzero ;
+  std::vector<bioExprDerive*> a_bioExprDerive ;
+  std::vector<bioExprBelongsTo*> a_bioExprBelongsTo ;
+  std::vector<bioExprIntegrate*> a_bioExprIntegrate ;
+  std::vector<bioExprLinearUtility*> a_bioExprLinearUtility ;
+  std::vector<bioExprLogLogit*> a_bioExprLogLogit ;
+  std::vector<bioExprLogLogitFullChoiceSet*> a_bioExprLogLogitFullChoiceSet ;
+  std::vector<bioExprMultSum*> a_bioExprMultSum ;
+  std::vector<bioExprConditionalSum*> a_bioExprConditionalSum ;
+  std::vector<bioExprElem*> a_bioExprElem ;
+  std::vector<bioSeveralExpressions*> a_bioSeveralExpressions ;
 };
 #endif

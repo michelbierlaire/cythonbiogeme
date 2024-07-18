@@ -5,7 +5,7 @@ Biogeme is an open source freeware designed for the maximum likelihood estimatio
 CythonBiogeme is the part of the package that involves C++ code, to be installed separately.
 
 ## Install
-Biogeme requires Python >= 3.8 and can be installed [from PyPI](https://pypi.org/project/biogeme/).
+Biogeme requires Python >= 3.10 and can be installed [from PyPI](https://pypi.org/project/biogeme/).
 
 `pip install cythonbiogeme`
 

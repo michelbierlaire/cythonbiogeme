@@ -36,8 +36,8 @@ class bioFormula {
   virtual void setDataMap(std::vector< std::vector<bioUInt> >* dm) ;
   virtual void setDraws(std::vector< std::vector< std::vector<bioReal> > >* d) ;
 protected:
-  std::map<bioString,bioExpression*> expressions ;
-  std::map<bioString,bioExpression*> literals ;
+  std::map<bioString,bioExpression* > expressions ;
+  std::map<bioString,bioExpression* > literals ;
   bioReal missingData ;
   bioExpression* processFormula(bioString f) ;
 private:

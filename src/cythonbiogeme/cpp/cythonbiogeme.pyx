@@ -177,8 +177,8 @@ cdef class pyBiogeme:
 					       &r_view[0])
 		return r
 	
-	def simulateSeveralFormulas(self, formulas, betas, fixedBetas, d, nThreads):
-		n = d.shape[0]
+	def simulateSeveralFormulas(self, formulas, betas, fixedBetas, d, nThreads, sample_size):
+		n = sample_size
 		nf = len(formulas)
 		r = np.zeros([nf, n])
 		if not r.flags['C_CONTIGUOUS']:

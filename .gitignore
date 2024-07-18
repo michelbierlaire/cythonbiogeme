@@ -4,6 +4,10 @@ build
 .idea/*
 .DS_Store
 src/cythonbiogeme.egg-info/*
+.idea/
+*.egg
+*.tar.gz
+
 # Prerequisites
 *.d
 

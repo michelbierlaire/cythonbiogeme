@@ -34,29 +34,27 @@ const bioDerivatives* bioExprExp::getValueAndDerivatives(std::vector<bioUInt> li
   theDerivatives.resize(n) ;
 
   const bioDerivatives* childResult = child->getValueAndDerivatives(literalIds,gradient,hessian) ;
-  if (childResult->f <= bioLogMaxReal::the()) { 
-    theDerivatives.f = exp(childResult->f) ;
-  }
-  else {
-    theDerivatives.f = std::numeric_limits<bioReal>::max() ;
-  }
+  theDerivatives.f = exp(childResult->f) ;
   if (gradient) {
     for (bioUInt i = 0 ; i < n ; ++i) {
       theDerivatives.g[i] = theDerivatives.f * childResult->g[i] ;
       if (hessian) {
-	for (bioUInt j = 0 ; j < n ; ++j) {
-	  theDerivatives.h[i][j] =
-	    theDerivatives.f *
-	    (
-	     childResult->h[i][j] +
-	     childResult->g[i] * childResult->g[j]
-	     );
-	}
+	    for (bioUInt j = 0 ; j < n ; ++j) {
+	      theDerivatives.h[i][j] =
+	      theDerivatives.f *
+	      (
+	        childResult->h[i][j] +
+	        childResult->g[i] * childResult->g[j]
+	      );
+	    }
       }
     }
   }
+  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
+
 }
+
 
 bioString bioExprExp::print(bioBoolean hp) const {
   std::stringstream str ; 
