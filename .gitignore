@@ -3,7 +3,6 @@ tests/__pycache__
 build
 
 .idea/
-*.whl
 *.egg
 *.tar.gz
 
