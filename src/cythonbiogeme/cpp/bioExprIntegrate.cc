@@ -37,7 +37,7 @@ const bioDerivatives* bioExprIntegrate::getValueAndDerivatives(std::vector<bioUI
   bioExprGaussHermite theGh(child, literalIds, rvId, gradient, hessian) ;
   bioGaussHermite theGhAlgo(&theGh) ;
   std::vector<bioReal> r = theGhAlgo.integrate() ;
-  theDerivatives.f = project(r[0]) ;
+  theDerivatives.f = r[0] ;
   bioUInt n = literalIds.size() ;
   if (gradient) {
     for (bioUInt j = 0 ; j < n ; ++j) {
@@ -53,7 +53,6 @@ const bioDerivatives* bioExprIntegrate::getValueAndDerivatives(std::vector<bioUI
 	}
 	++index ;
   }
-  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 
