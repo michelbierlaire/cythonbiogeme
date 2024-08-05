@@ -63,7 +63,6 @@ const bioDerivatives* bioExprConditionalSum::getValueAndDerivatives(std::vector<
       }
     }
   }
-  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 
