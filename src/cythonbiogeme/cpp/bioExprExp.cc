@@ -50,7 +50,6 @@ const bioDerivatives* bioExprExp::getValueAndDerivatives(std::vector<bioUInt> li
       }
     }
   }
-  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 
 }
