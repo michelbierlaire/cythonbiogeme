@@ -39,7 +39,7 @@ const bioDerivatives* bioExprLog::getValueAndDerivatives(std::vector<bioUInt> li
 
   const bioDerivatives* childResult = child->getValueAndDerivatives(literalIds,gradient,hessian) ;
   bioReal cf = childResult->f ;
-  if ((cf >= -almost_zero) and (cf < 0)) {
+  if ((cf >= -almost_zero) && (cf < 0)) {
     cf = 0.0 ;
   }
 
