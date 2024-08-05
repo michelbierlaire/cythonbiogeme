@@ -226,81 +226,10 @@ bioDerivatives& bioDerivatives::operator+=(const bioDerivatives& rhs) {
       }
     }
   }
-  dealWithNumericalIssues() ;
 
   return *this ;
 }
 
-void bioDerivatives::dealWithNumericalIssues() {
-  static const bioReal upper_bound = constants::get_upper_bound();
-
-
-  bioUInt n = getSize() ;
-  if (!std::isfinite(f)) {
-    if (std::signbit(f)) {
-      // It is a negative number
-      f = -upper_bound ;
-    }
-    else {
-      f = upper_bound ;
-    }
-  }
-  else {
-    f = project(f) ;
-  }
-
-  if (with_g) {
-    for (bioUInt i = 0 ; i < n ; ++i) {
-      if (!std::isfinite(g[i])) {
-        if (std::signbit(g[i])) {
-          // It is a negative number
-	      g[i] = -upper_bound ;
-        }
-        else {
-          g[i] = upper_bound ;
-        }
-      }
-      else {
-        g[i] = project(g[i]) ;
-      }
-      if (with_h) {
-	    for (bioUInt j = i ; j < n ; ++j) {
-	      if (!std::isfinite(h[i][j])) {
-	        if (std::signbit(h[i][j])) {
-	          h[i][j] = -upper_bound ;
-	        }
-	        else {
-	          h[i][j] = upper_bound ;
-	        }
-	      }
-	      else {
-	        h[i][j] = project(h[i][j]) ;
-	      }
-	    }
-      }
-      if (with_bhhh) {
-	    if (n != bhhh.size()) {
-	      std::stringstream str ;
-	      str << "Incorrect allocation of memory for BHHH: " << bhhh.size() << " instead of " << n ;
-	      throw bioExceptions(__FILE__, __LINE__, str.str()) ;
-	    }
-	    for (bioUInt j = i ; j < n ; ++j) {
-	      if (!std::isfinite(bhhh[i][j])) {
-	        if (std::signbit(bhhh[i][j])) {
-	          bhhh[i][j] = -upper_bound ;
-	        }
-	        else {
-	          bhhh[i][j] = upper_bound ;
-	        }
-	      }
-	      else {
-	        bhhh[i][j] = project(bhhh[i][j]) ;
-	      }
-	    }
-      }
-    }
-  }
-}
 
 void bioDerivatives::computeBhhh() {
   bioUInt n = getSize() ;
