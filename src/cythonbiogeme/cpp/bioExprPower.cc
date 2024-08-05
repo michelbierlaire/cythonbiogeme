@@ -43,7 +43,7 @@ const bioDerivatives* bioExprPower::getValueAndDerivatives(std::vector<bioUInt> 
   const bioDerivatives* rightResult = right->getValueAndDerivatives(literalIds,gradient,hessian) ;
 
   bioReal left_value(leftResult->f) ;
-  if (left_value >= -almost_zero and left_value < 0) {
+  if ((left_value >= -almost_zero) and (left_value < 0)) {
     left_value = 0.0 ;
   }
 
