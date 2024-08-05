@@ -9,9 +9,10 @@ Biogeme requires Python >= 3.10 and can be installed [from PyPI](https://pypi.or
 
 `pip install cythonbiogeme`
 
-Installing CythonBiogeme from source can be done after cloning the repository with the following command executed in the directory where the file `setup.py`is located:
+Installing CythonBiogeme from source can be done after cloning the repository with the following command executed in 
+the directory where the file `setup.py`is located:
 
-`pip install -ve .`
+`pip install .`
 
 ## Documentation
 Further documentation is available on https://biogeme.epfl.ch/
