@@ -302,7 +302,6 @@ void evaluateOneExpression::applyTheFormula() {
       results.disaggregate(theInput[thread]->theDerivatives) ;
     }
   }
-  results.dealWithNumericalIssues() ;
   return ;
 }
 

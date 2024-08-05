@@ -20,7 +20,6 @@ class bioVectorOfDerivatives {
   void resizeAll(bioUInt n) ;
   void setEverythingToZero() ;
   void setDerivativesToZero() ;
-  void dealWithNumericalIssues() ;
   void set_with_g(bioBoolean yes);
   void set_with_h(bioBoolean yes);
   void set_with_bhhh(bioBoolean yes);

@@ -64,13 +64,6 @@ void bioVectorOfDerivatives::setDerivativesToZero() {
 
 }
 
-void bioVectorOfDerivatives::dealWithNumericalIssues() {
-  for (std::vector<bioDerivatives>::iterator d = theDerivatives.begin() ;
-       d != theDerivatives.end() ;
-       ++d) {
-    d->dealWithNumericalIssues() ;
-  }
-}
 
 void bioVectorOfDerivatives::set_with_g(bioBoolean yes) {
   for (std::vector<bioDerivatives>::iterator d = theDerivatives.begin() ;

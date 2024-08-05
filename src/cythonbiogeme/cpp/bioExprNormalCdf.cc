@@ -30,7 +30,6 @@ const bioDerivatives* bioExprNormalCdf::getValueAndDerivatives(std::vector<bioUI
 
   const bioDerivatives* childResult = child->getValueAndDerivatives(literalIds,gradient,hessian) ;
   theDerivatives.f = theNormalCdf.compute(childResult->f) ;
-
   if (gradient) {
     bioUInt n = literalIds.size() ;
     bioReal thePdf = invSqrtTwoPi * exp(- childResult->f * childResult->f / 2.0) ;
@@ -66,7 +65,6 @@ const bioDerivatives* bioExprNormalCdf::getValueAndDerivatives(std::vector<bioUI
       }
     }
   }
-  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 

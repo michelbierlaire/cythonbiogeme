@@ -62,7 +62,6 @@ const bioDerivatives* bioExprMinus::getValueAndDerivatives(std::vector<bioUInt> 
     }
   }
 
-  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 

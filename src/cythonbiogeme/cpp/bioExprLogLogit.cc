@@ -42,9 +42,6 @@ const bioDerivatives* bioExprLogLogit::getValueAndDerivatives(std::vector<bioUIn
 							bioBoolean gradient,
 							bioBoolean hessian) {
 
-  static const bioReal upper_bound = constants::get_upper_bound();
-  //static const bioReal almost_zero = constants::get_almost_zero();
-  
   if (!gradient && hessian) {
     throw bioExceptions(__FILE__,
 			__LINE__,
@@ -73,7 +70,7 @@ const bioDerivatives* bioExprLogLogit::getValueAndDerivatives(std::vector<bioUIn
       if (avail->first == chosen) {
         // The chosen alternative is not available
 	    theDerivatives.setDerivativesToZero() ;
-	    theDerivatives.f = -upper_bound ;
+	    theDerivatives.f = log(0.0) ;
         return &theDerivatives ;
       }
     }
@@ -93,6 +90,7 @@ const bioDerivatives* bioExprLogLogit::getValueAndDerivatives(std::vector<bioUIn
       if (V == NULL) {
 	    throw bioExceptNullPointer(__FILE__,__LINE__,"result") ;
       }
+      DEBUG_MESSAGE("V[" << avail->first << "]=" << V->f) ;
       if (V->f > largestUtility) {
         largestUtility = V->f ;
       }
@@ -121,7 +119,6 @@ const bioDerivatives* bioExprLogLogit::getValueAndDerivatives(std::vector<bioUIn
 
 
 
-  
   denominator = 0.0 ;
   for (bioUInt k = 0 ; k < Vs.size() ; ++k) {
     expi[k] = exp(Vs[k].f - shift) ;
@@ -129,6 +126,8 @@ const bioDerivatives* bioExprLogLogit::getValueAndDerivatives(std::vector<bioUIn
   }
 
   theDerivatives.f = chosenUtility->f - log(denominator) - shift ;
+
+  DEBUG_MESSAGE("Logit = " << chosenUtility->f  << " - " << log(denominator) <<  " - " << shift << " = " << theDerivatives.f) ;
 
   if (gradient) {
 
@@ -175,8 +174,6 @@ const bioDerivatives* bioExprLogLogit::getValueAndDerivatives(std::vector<bioUIn
       }
     }
   }
-  //DEBUG_MESSAGE("bioExprLogLogit getValueAndDerivatives: DONE") ;
-  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 

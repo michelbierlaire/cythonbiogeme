@@ -72,7 +72,7 @@ bioReal biogeme::applyTheFormula(  std::vector<bioReal>* g,
 				   std::vector< std::vector<bioReal> >* h,
 				   std::vector< std::vector<bioReal> >* bh) {
 
-   static const bioReal upper_bound = constants::get_upper_bound();
+
   if ( g != NULL) {
     if (g->size() != theThreadMemory.dimension()) {
       std::stringstream str ;
@@ -157,21 +157,17 @@ bioReal biogeme::applyTheFormula(  std::vector<bioReal>* g,
       std::rethrow_exception(theExceptionPtr);
     }
     result += theInput[thread]->result ;
-    result = std::min(upper_bound, std::max(-upper_bound, result));
     if (g != NULL) {
       for (bioUInt i = 0 ; i < g->size() ; ++i) {
 	    (*g)[i] += (theInput[thread]->grad)[i] ;
-	    (*g)[i] = std::min(upper_bound, std::max(-upper_bound, (*g)[i]));
 	    if ( h != NULL) {
 	      for (bioUInt j = i ; j < g->size() ; ++j) {
 	        (*h)[i][j] += (theInput[thread]->hessian)[i][j] ;
-	        (*h)[i][j] = std::min(upper_bound, std::max(-upper_bound, (*h)[i][j]));
 	      }
 	    }
 	    if (bh != NULL) {
 	      for (bioUInt j = i ; j < g->size() ; ++j) {
 	        (*bh)[i][j] += (theInput[thread]->bhhh)[i][j] ;
-	        (*bh)[i][j] = std::min(upper_bound, std::max(-upper_bound, (*bh)[i][j]));
 	      }
 	    }
       }
@@ -315,7 +311,6 @@ void biogeme::setExpressions(std::vector<bioString> ll,
 
 void *computeFunctionForThread(void* fctPtr) {
   bioThreadArg *input = (bioThreadArg *) fctPtr;
-  bioExpression* debug_pointer = input->theLoglike.getExpression() ;
 
   try {
     bioReal w(1.0) ;

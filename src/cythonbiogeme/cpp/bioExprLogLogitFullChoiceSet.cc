@@ -33,9 +33,6 @@ const bioDerivatives* bioExprLogLogitFullChoiceSet::getValueAndDerivatives(std::
 							bioBoolean gradient,
 							bioBoolean hessian) {
 
-  //DEBUG_MESSAGE("bioExprLogLogitFullChoiceSet getValueAndDerivatives") ;
-  //static const bioReal upper_bound = constants::get_upper_bound();
-  //static const bioReal almost_zero = constants::get_almost_zero();
 
   if (!gradient && hessian) {
     throw bioExceptions(__FILE__,
@@ -89,14 +86,14 @@ const bioDerivatives* bioExprLogLogitFullChoiceSet::getValueAndDerivatives(std::
   shift = ceil(largestUtility / 10.0) * 10.0 ;
 
 
-  
   denominator = 0.0 ;
   for (bioUInt k = 0 ; k < Vs.size() ; ++k) {
-    expi[k] = exp(Vs[k].f - shift) ;
-    denominator += expi[k] ;
+      expi[k] = exp(Vs[k].f - shift) ;
+      denominator += expi[k] ;
   }
-
   theDerivatives.f = chosenUtility->f - log(denominator) - shift ;
+
+
 
   if (gradient) {
     std::fill(weightedSum.begin(), weightedSum.end(), 0.0);
@@ -142,8 +139,6 @@ const bioDerivatives* bioExprLogLogitFullChoiceSet::getValueAndDerivatives(std::
       }
     }
   }
-  //DEBUG_MESSAGE("bioExprLogLogitFullChoiceSet getValueAndDerivatives: DONE") ;
-  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 

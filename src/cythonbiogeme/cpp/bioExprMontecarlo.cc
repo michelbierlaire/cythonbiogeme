@@ -40,7 +40,7 @@ const bioDerivatives* bioExprMontecarlo::getValueAndDerivatives(std::vector<bioU
   child->setDrawIndex(&drawIndex) ;
   for (drawIndex = 0 ; drawIndex < numberOfDraws ; ++drawIndex) {
     const bioDerivatives* childResult = child->getValueAndDerivatives(literalIds,gradient,hessian) ;
-    theDerivatives.f += project(childResult->f) ;
+    theDerivatives.f += childResult->f ;
     if (gradient) {
       for (bioUInt i = 0 ; i < n ; ++i) {
         theDerivatives.g[i] += childResult->g[i] ;
@@ -71,7 +71,6 @@ const bioDerivatives* bioExprMontecarlo::getValueAndDerivatives(std::vector<bioU
       }
     }
   }
-  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 
