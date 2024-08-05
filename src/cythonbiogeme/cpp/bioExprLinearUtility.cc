@@ -56,7 +56,6 @@ const bioDerivatives* bioExprLinearUtility::getValueAndDerivatives(std::vector<b
        theDerivatives.g[i] = values[theFriend[i]] ;
     }
   }
-  theDerivatives.dealWithNumericalIssues() ;
   return &theDerivatives ;
 }
 
