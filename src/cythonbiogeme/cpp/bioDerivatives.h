@@ -24,7 +24,6 @@ class bioDerivatives {
   void setDerivativesToZero() ;
   void computeBhhh() ;
   bioUInt getSize() const ;
-  void dealWithNumericalIssues() ;
 public:
   bioBoolean with_g ;
   bioBoolean with_h ;
